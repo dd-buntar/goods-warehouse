@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Shipment {
-    private Integer shipmentId;
-    private Integer productId;
+    private Long shipmentId;
+    private Long productId;
     private Integer purchasePrice; // закупочная цена
     private Integer salePrice; // цена продажи
     private LocalDateTime productionDate; // дата изготовления

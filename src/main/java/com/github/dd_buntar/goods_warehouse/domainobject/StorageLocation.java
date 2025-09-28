@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StorageLocation {
-    private Integer locationId;
+    private Long locationId;
     private Integer rackNum; // стеллаж
     private Integer shelfNum; // полка
 }

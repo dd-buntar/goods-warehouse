@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Manufacturer {
-    private Integer manufacturerId;
+    private Long manufacturerId;
     private String manufacturerName;
     private String contactPhone;
     private String country;

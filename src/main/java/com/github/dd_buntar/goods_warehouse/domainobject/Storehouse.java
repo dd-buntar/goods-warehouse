@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Storehouse {
-    private Integer stockId;
-    private Integer shipmentId;
+    private Long stockId;
+    private Long shipmentId;
     private Integer quantity;
-    private Integer locationId;
+    private Long locationId;
 
 
 }
