@@ -1,4 +1,4 @@
-package com.github.dd_buntar.goods_warehouse.domainobject;
+package com.github.dd_buntar.goods_warehouse.domain.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

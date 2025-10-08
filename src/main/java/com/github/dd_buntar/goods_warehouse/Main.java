@@ -2,7 +2,7 @@
 // then press Enter. You can now see whitespace characters in your code.
 package com.github.dd_buntar.goods_warehouse;
 
-import com.github.dd_buntar.goods_warehouse.domainobject.Manufacturer;
+import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
 
 public class Main {
     public static void main(String[] args) {
