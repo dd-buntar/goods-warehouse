@@ -54,7 +54,10 @@ public class InMemoryStorageLocationRepository implements StorageLocationReposit
         return storageLocationStorage.remove(id) != null;
     }
 
-    // Дополнительные методы для бизнес-логики
+
+    /**
+     * Найти все уникальные shipmentId в хранилище
+     */
     public Optional<StorageLocation> findByRackAndShelf(Integer rackNum, Integer shelfNum) {
         return storageLocationStorage.values().stream()
                 .filter(location -> location.getRackNum().equals(rackNum)
@@ -62,26 +65,36 @@ public class InMemoryStorageLocationRepository implements StorageLocationReposit
                 .findFirst();
     }
 
+    /**
+     * Найти по номеру стеллажа
+     */
     public List<StorageLocation> findByRackNumber(Integer rackNum) {
         return storageLocationStorage.values().stream()
                 .filter(location -> location.getRackNum().equals(rackNum))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Проверить, существует ли стеллаж и полка
+     */
     public boolean existsByRackAndShelf(Integer rackNum, Integer shelfNum) {
         return storageLocationStorage.values().stream()
                 .anyMatch(location -> location.getRackNum().equals(rackNum)
                         && location.getShelfNum().equals(shelfNum));
     }
 
-    // Метод для получения всех уникальных номеров стеллажей
+    /**
+     * Получить все уникальные номера стеллажей
+     */
     public Set<Integer> findAllRackNumbers() {
         return storageLocationStorage.values().stream()
                 .map(StorageLocation::getRackNum)
                 .collect(Collectors.toSet());
     }
 
-    // Метод для получения всех полок на конкретном стеллаже
+    /**
+     * Получить все полки на конкретном стеллаже
+     */
     public List<Integer> findShelvesByRack(Integer rackNum) {
         return storageLocationStorage.values().stream()
                 .filter(location -> location.getRackNum().equals(rackNum))
