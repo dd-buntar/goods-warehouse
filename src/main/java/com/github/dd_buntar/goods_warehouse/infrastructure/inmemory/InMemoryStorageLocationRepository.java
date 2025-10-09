@@ -5,6 +5,7 @@ import com.github.dd_buntar.goods_warehouse.domain.repositories.StorageLocationR
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public class InMemoryStorageLocationRepository implements StorageLocationRepository {
     private final Map<Long, StorageLocation> storageLocationStorage = new HashMap<>();
@@ -52,4 +53,41 @@ public class InMemoryStorageLocationRepository implements StorageLocationReposit
     public boolean deleteById(Long id) {
         return storageLocationStorage.remove(id) != null;
     }
+
+    // Дополнительные методы для бизнес-логики
+    public Optional<StorageLocation> findByRackAndShelf(Integer rackNum, Integer shelfNum) {
+        return storageLocationStorage.values().stream()
+                .filter(location -> location.getRackNum().equals(rackNum)
+                        && location.getShelfNum().equals(shelfNum))
+                .findFirst();
+    }
+
+    public List<StorageLocation> findByRackNumber(Integer rackNum) {
+        return storageLocationStorage.values().stream()
+                .filter(location -> location.getRackNum().equals(rackNum))
+                .collect(Collectors.toList());
+    }
+
+    public boolean existsByRackAndShelf(Integer rackNum, Integer shelfNum) {
+        return storageLocationStorage.values().stream()
+                .anyMatch(location -> location.getRackNum().equals(rackNum)
+                        && location.getShelfNum().equals(shelfNum));
+    }
+
+    // Метод для получения всех уникальных номеров стеллажей
+    public Set<Integer> findAllRackNumbers() {
+        return storageLocationStorage.values().stream()
+                .map(StorageLocation::getRackNum)
+                .collect(Collectors.toSet());
+    }
+
+    // Метод для получения всех полок на конкретном стеллаже
+    public List<Integer> findShelvesByRack(Integer rackNum) {
+        return storageLocationStorage.values().stream()
+                .filter(location -> location.getRackNum().equals(rackNum))
+                .map(StorageLocation::getShelfNum)
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
 }
