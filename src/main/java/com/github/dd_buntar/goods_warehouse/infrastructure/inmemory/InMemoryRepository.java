@@ -1,15 +1,17 @@
 package com.github.dd_buntar.goods_warehouse.infrastructure.inmemory;
 
-//public class InMemoryRepository<T> implements Repository<T, Long> {
-//    private final Map<Long, T> storage = new HashMap<>();
-//    private Long curId = 1L;
-//
-//    @Override
-//    public T add(T entity) {
-//        if (entity.getId() == null) {
+import java.util.HashMap;
+import java.util.Map;
+
+public class InMemoryRepository<T, ID> {  // ?????
+    private final Map<ID, T> storage = new HashMap<>();
+    private Long curId = 1L;
+
+//    public T add(T entity, ID id) {
+//        if (id == null) {
 //            Long newId = curId++;
 //            entity.setId(newId);
 //        }
 //    }
-//
-//}
+
+}

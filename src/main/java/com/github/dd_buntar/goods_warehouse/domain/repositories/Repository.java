@@ -8,5 +8,5 @@ public interface Repository<T, ID> {
     Optional<T> findById(final ID id);
     List<T> findAll();
     Optional<T> update(final T entity);
-    boolean deleteById(final ID id);
+    boolean deleteById(final ID id); // void
 }
