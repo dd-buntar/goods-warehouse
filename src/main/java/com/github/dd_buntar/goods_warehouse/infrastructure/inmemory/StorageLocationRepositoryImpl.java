@@ -58,6 +58,7 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
     /**
      * Найти все уникальные shipmentId в хранилище
      */
+    @Override
     public Optional<StorageLocation> findByRackAndShelf(Integer rackNum, Integer shelfNum) {
         return storageLocationStorage.values().stream()
                 .filter(location -> location.getRackNum().equals(rackNum)
@@ -68,6 +69,7 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
     /**
      * Найти по номеру стеллажа
      */
+    @Override
     public List<StorageLocation> findByRackNumber(Integer rackNum) {
         return storageLocationStorage.values().stream()
                 .filter(location -> location.getRackNum().equals(rackNum))
@@ -77,6 +79,7 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
     /**
      * Проверить, существует ли стеллаж и полка
      */
+    @Override
     public boolean existsByRackAndShelf(Integer rackNum, Integer shelfNum) {
         return storageLocationStorage.values().stream()
                 .anyMatch(location -> location.getRackNum().equals(rackNum)
@@ -86,6 +89,7 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
     /**
      * Получить все уникальные номера стеллажей
      */
+    @Override
     public Set<Integer> findAllRackNumbers() {
         return storageLocationStorage.values().stream()
                 .map(StorageLocation::getRackNum)
@@ -95,6 +99,7 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
     /**
      * Получить все полки на конкретном стеллаже
      */
+    @Override
     public List<Integer> findShelvesByRack(Integer rackNum) {
         return storageLocationStorage.values().stream()
                 .filter(location -> location.getRackNum().equals(rackNum))

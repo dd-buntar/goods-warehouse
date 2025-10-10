@@ -61,6 +61,7 @@ public class ShipmentRepositoryImpl implements ShipmentRepository {
     /**
      * Найти поставки по ID товара
      */
+    @Override
     public List<Shipment> findByProductId(Long productId) {
         return shipmentStorage.values().stream()
                 .filter(shipment -> shipment.getProductId().equals(productId))
@@ -70,6 +71,7 @@ public class ShipmentRepositoryImpl implements ShipmentRepository {
     /**
      * Найти просроченные поставки
      */
+    @Override
     public List<Shipment> findExpiredShipments(LocalDateTime currentDate) {
         return shipmentStorage.values().stream()
                 .filter(shipment -> shipment.getExpiryDate() != null)
@@ -80,6 +82,7 @@ public class ShipmentRepositoryImpl implements ShipmentRepository {
     /**
      * Найти поставки по дате производства
      */
+    @Override
     public List<Shipment> findByProductionDate(LocalDateTime productionDate) {
         return shipmentStorage.values().stream()
                 .filter(shipment -> shipment.getProductionDate() != null)
@@ -90,6 +93,7 @@ public class ShipmentRepositoryImpl implements ShipmentRepository {
     /**
      * Найти поставки по дате прибытия
      */
+    @Override
     public List<Shipment> findByArrivalDate(LocalDateTime arrivalDate) {
         return shipmentStorage.values().stream()
                 .filter(shipment -> shipment.getArrivalDate() != null)
@@ -100,6 +104,7 @@ public class ShipmentRepositoryImpl implements ShipmentRepository {
     /**
      * Найти поставки с наибольшей маржой (разница между продажной и закупочной ценой)
      */
+    @Override
     public List<Shipment> findTopProfitableShipments(int limit) {
         return shipmentStorage.values().stream()
                 .sorted((s1, s2) -> Integer.compare(
@@ -112,6 +117,7 @@ public class ShipmentRepositoryImpl implements ShipmentRepository {
     /**
      * Найти поставки с наименьшей маржой
      */
+    @Override
     public List<Shipment> findLeastProfitableShipments(int limit) {
         return shipmentStorage.values().stream()
                 .filter(shipment -> calculateMargin(shipment) >= 0)
@@ -123,27 +129,10 @@ public class ShipmentRepositoryImpl implements ShipmentRepository {
     /**
      * Найти поставки с убыточными ценами (продажная цена меньше закупочной)
      */
+    @Override
     public List<Shipment> findLossMakingShipments() {
         return shipmentStorage.values().stream()
                 .filter(shipment -> shipment.getSalePrice() < shipment.getPurchasePrice())
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Найти поставки с отсутствующей датой производства
-     */
-    public List<Shipment> findShipmentsWithoutProductionDate() {
-        return shipmentStorage.values().stream()
-                .filter(shipment -> shipment.getProductionDate() == null)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Найти поставки с отсутствующей датой истечения срока
-     */
-    public List<Shipment> findShipmentsWithoutExpiryDate() {
-        return shipmentStorage.values().stream()
-                .filter(shipment -> shipment.getExpiryDate() == null)
                 .collect(Collectors.toList());
     }
 

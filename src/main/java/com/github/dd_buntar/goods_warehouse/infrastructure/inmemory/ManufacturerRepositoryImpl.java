@@ -58,6 +58,7 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
     /**
      * Найти производителя по названию (точное совпадение)
      */
+    @Override
     public Optional<Manufacturer> findByName(String name) {
         return manufacturerStorage.values().stream()
                 .filter(manufacturer -> manufacturer.getManufacturerName().equalsIgnoreCase(name))
@@ -67,6 +68,7 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
     /**
      * Найти производителей по стране
      */
+    @Override
     public List<Manufacturer> findByCountry(String country) {
         return manufacturerStorage.values().stream()
                 .filter(manufacturer -> manufacturer.getCountry().equalsIgnoreCase(country))
@@ -76,6 +78,7 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
     /**
      * Проверить существование производителя с таким названием
      */
+    @Override
     public boolean existsByName(String name) {
         return manufacturerStorage.values().stream()
                 .anyMatch(manufacturer -> manufacturer.getManufacturerName().equalsIgnoreCase(name));
@@ -84,6 +87,7 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
     /**
      * Найти производителей по телефону
      */
+    @Override
     public Optional<Manufacturer> findByPhone(String phone) {
         return manufacturerStorage.values().stream()
                 .filter(manufacturer -> manufacturer.getContactPhone().equals(phone))
@@ -93,6 +97,7 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
     /**
      * Обновить контактный телефон производителя
      */
+    @Override
     public Optional<Manufacturer> updatePhone(Long manufacturerId, String newPhone) {
         return findById(manufacturerId)
                 .map(manufacturer -> {

@@ -58,6 +58,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     /**
      * Найти товары по названию (точное совпадение)
      */
+    @Override
     public Optional<Product> findByName(String name) {
         return productStorage.values().stream()
                 .filter(product -> product.getProductName().equalsIgnoreCase(name))
@@ -67,6 +68,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     /**
      * Найти товары по производителю
      */
+    @Override
     public List<Product> findByManufacturerId(Long manufacturerId) {
         return productStorage.values().stream()
                 .filter(product -> product.getManufacturerId().equals(manufacturerId))
@@ -76,6 +78,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     /**
      * Найти товары по весу (диапазон)
      */
+    @Override
     public List<Product> findByWeightRange(Integer minWeight, Integer maxWeight) {
         return productStorage.values().stream()
                 .filter(product -> product.getWeight() >= minWeight && product.getWeight() <= maxWeight)
@@ -85,6 +88,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     /**
      * Получить все уникальные идентификаторы производителей
      */
+    @Override
     public Set<Long> findAllManufacturerIds() {
         return productStorage.values().stream()
                 .map(Product::getManufacturerId)

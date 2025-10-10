@@ -58,6 +58,7 @@ public class StorehouseRepositoryImpl implements StorehouseRepository {
     /**
      * Найти все записи по ID местоположения
      */
+    @Override
     public List<Storehouse> findByLocationId(Long locationId) {
         return storehouseStorage.values().stream()
                 .filter(storehouse -> storehouse.getLocationId().equals(locationId))
@@ -67,6 +68,7 @@ public class StorehouseRepositoryImpl implements StorehouseRepository {
     /**
      * Найти все записи по ID поставки
      */
+    @Override
     public List<Storehouse> findByShipmentId(Long shipmentId) {
         return storehouseStorage.values().stream()
                 .filter(storehouse -> storehouse.getShipmentId().equals(shipmentId))
@@ -76,6 +78,7 @@ public class StorehouseRepositoryImpl implements StorehouseRepository {
     /**
      * Найти запись по поставке и местоположению
      */
+    @Override
     public Optional<Storehouse> findByShipmentAndLocation(Long shipmentId, Long locationId) {
         return storehouseStorage.values().stream()
                 .filter(storehouse -> storehouse.getShipmentId().equals(shipmentId)
@@ -86,6 +89,7 @@ public class StorehouseRepositoryImpl implements StorehouseRepository {
     /**
      * Получить количество конкретного товара (по shipmentId) на складе
      */
+    @Override
     public Integer getQuantityByShipment(Long shipmentId) {
         return storehouseStorage.values().stream()
                 .filter(storehouse -> storehouse.getShipmentId().equals(shipmentId))
@@ -96,6 +100,7 @@ public class StorehouseRepositoryImpl implements StorehouseRepository {
     /**
      * Найти местоположения с положительным количеством товара (есть в наличии)
      */
+    @Override
     public List<Storehouse> findAvailableStock() {
         return storehouseStorage.values().stream()
                 .filter(storehouse -> storehouse.getQuantity() > 0)
@@ -105,6 +110,7 @@ public class StorehouseRepositoryImpl implements StorehouseRepository {
     /**
      * Найти местоположения с отрицательным количеством (недостача/резерв)
      */
+    @Override
     public List<Storehouse> findNegativeStock() {
         return storehouseStorage.values().stream()
                 .filter(storehouse -> storehouse.getQuantity() < 0)
@@ -114,27 +120,10 @@ public class StorehouseRepositoryImpl implements StorehouseRepository {
     /**
      * Найти местоположения с нулевым количеством
      */
+    @Override
     public List<Storehouse> findZeroStock() {
         return storehouseStorage.values().stream()
                 .filter(storehouse -> storehouse.getQuantity() == 0)
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Найти все уникальные shipmentId в хранилище
-     */
-    public Set<Long> findAllShipmentIds() {
-        return storehouseStorage.values().stream()
-                .map(Storehouse::getShipmentId)
-                .collect(Collectors.toSet());
-    }
-
-    /**
-     * Найти все уникальные locationId в хранилище
-     */
-    public Set<Long> findAllLocationIds() {
-        return storehouseStorage.values().stream()
-                .map(Storehouse::getLocationId)
-                .collect(Collectors.toSet());
     }
 }
