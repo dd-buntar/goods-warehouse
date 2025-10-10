@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-public class InMemoryStorehouseRepository implements StorehouseRepository {
+public class StorehouseRepositoryImpl implements StorehouseRepository {
     private final Map<Long, Storehouse> storehouseStorage = new HashMap<>();
     private final AtomicLong idCounter = new AtomicLong(1);
 

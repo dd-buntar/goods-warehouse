@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-public class InMemoryShipmentRepository implements ShipmentRepository {
+public class ShipmentRepositoryImpl implements ShipmentRepository {
     private final Map<Long, Shipment> shipmentStorage = new HashMap<>();
     private final AtomicLong idCounter = new AtomicLong(1);
 

@@ -3,7 +3,7 @@ package com.github.dd_buntar.goods_warehouse.infrastructure.inmemory;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InMemoryRepository<T, ID> {  // ?????
+public class RepositoryImpl<T, ID> {  // ?????
     private final Map<ID, T> storage = new HashMap<>();
     private Long curId = 1L;
 

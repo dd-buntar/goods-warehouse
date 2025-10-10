@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-public class InMemoryProductRepository implements ProductRepository {
+public class ProductRepositoryImpl implements ProductRepository {
     private final Map<Long, Product> productStorage = new HashMap<>();
     private final AtomicLong idCounter = new AtomicLong(1);
 
