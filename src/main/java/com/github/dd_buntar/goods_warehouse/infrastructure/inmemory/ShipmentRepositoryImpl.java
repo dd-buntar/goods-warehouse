@@ -68,16 +68,16 @@ public class ShipmentRepositoryImpl implements ShipmentRepository {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Найти просроченные поставки
-     */
-    @Override
-    public List<Shipment> findExpiredShipments(LocalDateTime currentDate) {
-        return shipmentStorage.values().stream()
-                .filter(shipment -> shipment.getExpiryDate() != null)
-                .filter(shipment -> shipment.getExpiryDate().isBefore(currentDate))
-                .collect(Collectors.toList());
-    }
+//    /**
+//     * Найти просроченные поставки ???
+//     */
+//    @Override
+//    public List<Shipment> findExpiredShipments(LocalDateTime currentDate) {
+//        return shipmentStorage.values().stream()
+//                .filter(shipment -> shipment.getExpiryDate() != null)
+//                .filter(shipment -> shipment.getExpiryDate().isBefore(currentDate))
+//                .collect(Collectors.toList());
+//    }
 
     /**
      * Найти поставки по дате производства
@@ -101,43 +101,43 @@ public class ShipmentRepositoryImpl implements ShipmentRepository {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Найти поставки с наибольшей маржой (разница между продажной и закупочной ценой)
-     */
-    @Override
-    public List<Shipment> findTopProfitableShipments(int limit) {
-        return shipmentStorage.values().stream()
-                .sorted((s1, s2) -> Integer.compare(
-                        calculateMargin(s2), calculateMargin(s1)
-                ))
-                .limit(limit)
-                .collect(Collectors.toList());
-    }
+//    /**
+//     * Найти поставки с наибольшей маржой (разница между продажной и закупочной ценой) ???
+//     */
+//    @Override
+//    public List<Shipment> findTopProfitableShipments(int limit) {
+//        return shipmentStorage.values().stream()
+//                .sorted((s1, s2) -> Integer.compare(
+//                        calculateMargin(s2), calculateMargin(s1)
+//                ))
+//                .limit(limit)
+//                .collect(Collectors.toList());
+//    }
 
-    /**
-     * Найти поставки с наименьшей маржой
-     */
-    @Override
-    public List<Shipment> findLeastProfitableShipments(int limit) {
-        return shipmentStorage.values().stream()
-                .filter(shipment -> calculateMargin(shipment) >= 0)
-                .sorted(Comparator.comparingInt(this::calculateMargin))
-                .limit(limit)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Найти поставки с убыточными ценами (продажная цена меньше закупочной)
-     */
-    @Override
-    public List<Shipment> findLossMakingShipments() {
-        return shipmentStorage.values().stream()
-                .filter(shipment -> shipment.getSalePrice() < shipment.getPurchasePrice())
-                .collect(Collectors.toList());
-    }
-
-    // Вспомогательный метод для расчета маржи
-    private int calculateMargin(Shipment shipment) {
-        return shipment.getSalePrice() - shipment.getPurchasePrice();
-    }
+//    /**
+//     * Найти поставки с наименьшей маржой ???
+//     */
+//    @Override
+//    public List<Shipment> findLeastProfitableShipments(int limit) {
+//        return shipmentStorage.values().stream()
+//                .filter(shipment -> calculateMargin(shipment) >= 0)
+//                .sorted(Comparator.comparingInt(this::calculateMargin))
+//                .limit(limit)
+//                .collect(Collectors.toList());
+//    }
+//
+//    /**
+//     * Найти поставки с убыточными ценами (продажная цена меньше закупочной) ???
+//     */
+//    @Override
+//    public List<Shipment> findLossMakingShipments() {
+//        return shipmentStorage.values().stream()
+//                .filter(shipment -> shipment.getSalePrice() < shipment.getPurchasePrice())
+//                .collect(Collectors.toList());
+//    }
+//
+//    // Вспомогательный метод для расчета маржи
+//    private int calculateMargin(Shipment shipment) {
+//        return shipment.getSalePrice() - shipment.getPurchasePrice();
+//    }
 }

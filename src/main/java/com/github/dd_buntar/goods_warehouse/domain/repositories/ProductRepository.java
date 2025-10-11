@@ -9,6 +9,7 @@ import java.util.Set;
 public interface ProductRepository extends Repository<Product, Long>{
     Optional<Product> findByName(String name);
     List<Product> findByManufacturerId(Long manufacturerId);
-    List<Product> findByWeightRange(Integer minWeight, Integer maxWeight);
-    Set<Long> findAllManufacturerIds();
+
+    //List<Product> findByWeightRange(Integer minWeight, Integer maxWeight);
+    //Set<Long> findAllManufacturerIds();
 }

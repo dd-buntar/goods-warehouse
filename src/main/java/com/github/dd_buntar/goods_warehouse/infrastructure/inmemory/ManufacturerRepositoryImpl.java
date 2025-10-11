@@ -75,14 +75,14 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Проверить существование производителя с таким названием
-     */
-    @Override
-    public boolean existsByName(String name) {
-        return manufacturerStorage.values().stream()
-                .anyMatch(manufacturer -> manufacturer.getManufacturerName().equalsIgnoreCase(name));
-    }
+//    /**
+//     * Проверить существование производителя с таким названием
+//     */
+//    @Override
+//    public boolean existsByName(String name) {
+//        return manufacturerStorage.values().stream()
+//                .anyMatch(manufacturer -> manufacturer.getManufacturerName().equalsIgnoreCase(name));
+//    }
 
     /**
      * Найти производителей по телефону

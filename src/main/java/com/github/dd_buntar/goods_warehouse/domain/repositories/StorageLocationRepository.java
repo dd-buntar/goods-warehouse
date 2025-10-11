@@ -7,9 +7,10 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface StorageLocationRepository extends Repository<StorageLocation, Long>{
-    Optional<StorageLocation> findByRackAndShelf(Integer rackNum, Integer shelfNum);
     List<StorageLocation> findByRackNumber(Integer rackNum);
-    boolean existsByRackAndShelf(Integer rackNum, Integer shelfNum);
     Set<Integer> findAllRackNumbers();
     List<Integer> findShelvesByRack(Integer rackNum);
+
+    //Optional<StorageLocation> findByRackAndShelf(Integer rackNum, Integer shelfNum);
+    // boolean existsByRackAndShelf(Integer rackNum, Integer shelfNum);
 }

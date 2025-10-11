@@ -75,23 +75,23 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Найти товары по весу (диапазон)
-     */
-    @Override
-    public List<Product> findByWeightRange(Integer minWeight, Integer maxWeight) {
-        return productStorage.values().stream()
-                .filter(product -> product.getWeight() >= minWeight && product.getWeight() <= maxWeight)
-                .collect(Collectors.toList());
-    }
+//    /**
+//     * Найти товары по весу (диапазон)
+//     */
+//    @Override
+//    public List<Product> findByWeightRange(Integer minWeight, Integer maxWeight) {
+//        return productStorage.values().stream()
+//                .filter(product -> product.getWeight() >= minWeight && product.getWeight() <= maxWeight)
+//                .collect(Collectors.toList());
+//    }
 
-    /**
-     * Получить все уникальные идентификаторы производителей
-     */
-    @Override
-    public Set<Long> findAllManufacturerIds() {
-        return productStorage.values().stream()
-                .map(Product::getManufacturerId)
-                .collect(Collectors.toSet());
-    }
+//    /**
+//     * Получить все уникальные идентификаторы производителей
+//     */
+//    @Override
+//    public Set<Long> findAllManufacturerIds() {
+//        return productStorage.values().stream()
+//                .map(Product::getManufacturerId)
+//                .collect(Collectors.toSet());
+//    }
 }

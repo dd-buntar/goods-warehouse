@@ -55,16 +55,16 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
     }
 
 
-    /**
-     * Найти все уникальные shipmentId в хранилище
-     */
-    @Override
-    public Optional<StorageLocation> findByRackAndShelf(Integer rackNum, Integer shelfNum) {
-        return storageLocationStorage.values().stream()
-                .filter(location -> location.getRackNum().equals(rackNum)
-                        && location.getShelfNum().equals(shelfNum))
-                .findFirst();
-    }
+//    /**
+//     * Найти все уникальные shipmentId в хранилище
+//     */
+//    @Override
+//    public Optional<StorageLocation> findByRackAndShelf(Integer rackNum, Integer shelfNum) {
+//        return storageLocationStorage.values().stream()
+//                .filter(location -> location.getRackNum().equals(rackNum)
+//                        && location.getShelfNum().equals(shelfNum))
+//                .findFirst();
+//    }
 
     /**
      * Найти по номеру стеллажа
@@ -76,15 +76,15 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Проверить, существует ли стеллаж и полка
-     */
-    @Override
-    public boolean existsByRackAndShelf(Integer rackNum, Integer shelfNum) {
-        return storageLocationStorage.values().stream()
-                .anyMatch(location -> location.getRackNum().equals(rackNum)
-                        && location.getShelfNum().equals(shelfNum));
-    }
+//    /**
+//     * Проверить, существует ли стеллаж и полка
+//     */
+//    @Override
+//    public boolean existsByRackAndShelf(Integer rackNum, Integer shelfNum) {
+//        return storageLocationStorage.values().stream()
+//                .anyMatch(location -> location.getRackNum().equals(rackNum)
+//                        && location.getShelfNum().equals(shelfNum));
+//    }
 
     /**
      * Получить все уникальные номера стеллажей
