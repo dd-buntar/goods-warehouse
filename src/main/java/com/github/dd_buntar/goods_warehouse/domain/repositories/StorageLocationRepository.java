@@ -11,6 +11,5 @@ public interface StorageLocationRepository extends Repository<StorageLocation, L
     Set<Integer> findAllRackNumbers();
     List<Integer> findShelvesByRack(Integer rackNum);
 
-    //Optional<StorageLocation> findByRackAndShelf(Integer rackNum, Integer shelfNum);
-    // boolean existsByRackAndShelf(Integer rackNum, Integer shelfNum);
+    //boolean existsByRackAndShelf(Integer rackNum, Integer shelfNum);
 }

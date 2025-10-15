@@ -12,10 +12,12 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
     private final AtomicLong idCounter = new AtomicLong(1);
 
     @Override
-    public StorageLocation create(StorageLocation entity) {
+    public Optional<StorageLocation> create(StorageLocation entity) {
         Long nextId = idCounter.getAndIncrement();
 
-        // Создаем копию объекта с новым ID
+        if (!findByRackAndShelf(entity.getRackNum(), entity.getShelfNum()).isPresent()) {
+            return Optional.empty();
+        }
         StorageLocation newLocation = StorageLocation.builder()
                 .locationId(nextId)
                 .rackNum(entity.getRackNum())
@@ -23,7 +25,7 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
                 .build();
 
         storageLocationStorage.put(nextId, newLocation);
-        return newLocation;
+        return Optional.of(newLocation);
     }
 
     @Override
@@ -43,6 +45,17 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
         }
 
         if (storageLocationStorage.containsKey(entity.getLocationId())) {
+            Long id = entity.getLocationId();
+            StorageLocation curEntity = storageLocationStorage.get(id);
+            if (entity.getRackNum().equals(curEntity.getRackNum()) &&
+                    entity.getShelfNum().equals(curEntity.getShelfNum())) {
+                return Optional.of(curEntity);
+            }
+
+            if (!findByRackAndShelf(entity.getRackNum(), entity.getShelfNum()).isPresent()) {
+                return Optional.empty();
+            }
+
             storageLocationStorage.put(entity.getLocationId(), entity);
             return Optional.of(entity);
         }
@@ -54,18 +67,6 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
         return storageLocationStorage.remove(id) != null;
     }
 
-
-//    /**
-//     * Найти все уникальные shipmentId в хранилище
-//     */
-//    @Override
-//    public Optional<StorageLocation> findByRackAndShelf(Integer rackNum, Integer shelfNum) {
-//        return storageLocationStorage.values().stream()
-//                .filter(location -> location.getRackNum().equals(rackNum)
-//                        && location.getShelfNum().equals(shelfNum))
-//                .findFirst();
-//    }
-
     /**
      * Найти по номеру стеллажа
      */
@@ -75,16 +76,6 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
                 .filter(location -> location.getRackNum().equals(rackNum))
                 .collect(Collectors.toList());
     }
-
-//    /**
-//     * Проверить, существует ли стеллаж и полка
-//     */
-//    @Override
-//    public boolean existsByRackAndShelf(Integer rackNum, Integer shelfNum) {
-//        return storageLocationStorage.values().stream()
-//                .anyMatch(location -> location.getRackNum().equals(rackNum)
-//                        && location.getShelfNum().equals(shelfNum));
-//    }
 
     /**
      * Получить все уникальные номера стеллажей
@@ -108,4 +99,23 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Найти, существует ли локация с таким номером стеллажа и номером полки
+     */
+    private Optional<StorageLocation> findByRackAndShelf(Integer rackNum, Integer shelfNum) {
+        return storageLocationStorage.values().stream()
+                .filter(location -> location.getRackNum().equals(rackNum)
+                        && location.getShelfNum().equals(shelfNum))
+                .findFirst();
+    }
+
+//    /**
+//     * Проверить, существует ли стеллаж и полка
+//     */
+//    @Override
+//    public boolean existsByRackAndShelf(Integer rackNum, Integer shelfNum) {
+//        return storageLocationStorage.values().stream()
+//                .anyMatch(location -> location.getRackNum().equals(rackNum)
+//                        && location.getShelfNum().equals(shelfNum));
+//    }
 }
