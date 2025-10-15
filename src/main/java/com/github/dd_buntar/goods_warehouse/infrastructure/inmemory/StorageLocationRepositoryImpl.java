@@ -108,14 +108,4 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
                         && location.getShelfNum().equals(shelfNum))
                 .findFirst();
     }
-
-//    /**
-//     * Проверить, существует ли стеллаж и полка
-//     */
-//    @Override
-//    public boolean existsByRackAndShelf(Integer rackNum, Integer shelfNum) {
-//        return storageLocationStorage.values().stream()
-//                .anyMatch(location -> location.getRackNum().equals(rackNum)
-//                        && location.getShelfNum().equals(shelfNum));
-//    }
 }
