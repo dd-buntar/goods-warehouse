@@ -12,8 +12,12 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
     private final AtomicLong idCounter = new AtomicLong(1);
 
     @Override
-    public Manufacturer create(Manufacturer entity) {
+    public Optional<Manufacturer> create(Manufacturer entity) {
         Long nextId = idCounter.getAndIncrement();
+
+        if (findByPhone(entity.getContactPhone()).isPresent()) {
+            return Optional.empty();
+        }
 
         Manufacturer newManufacturer = Manufacturer.builder()
                 .manufacturerId(nextId)
@@ -23,7 +27,7 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
                 .build();
 
         manufacturerStorage.put(nextId, newManufacturer);
-        return newManufacturer;
+        return Optional.of(newManufacturer);
     }
 
     @Override
@@ -38,13 +42,28 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
 
     @Override
     public Optional<Manufacturer> update(Manufacturer entity) {
-        if (entity.getManufacturerId() == null) {
-            return Optional.empty();
-        }
-
         if (manufacturerStorage.containsKey(entity.getManufacturerId())) {
-            manufacturerStorage.put(entity.getManufacturerId(), entity);
-            return Optional.of(entity);
+            Long id = entity.getManufacturerId();
+            Manufacturer curManufacturer = manufacturerStorage.get(id);
+
+            if (entity.getManufacturerName().equals(curManufacturer.getManufacturerName()) &&
+                    entity.getContactPhone().equals(curManufacturer.getContactPhone()) &&
+                    entity.getCountry().equals(curManufacturer.getCountry())) {
+                return Optional.of(curManufacturer);
+            }
+
+            if (findByPhone(entity.getContactPhone()).isPresent()) {
+                return Optional.empty();
+            }
+
+            Manufacturer manufacturerToSave = Manufacturer.builder()
+                    .manufacturerId(entity.getManufacturerId())
+                    .manufacturerName(entity.getManufacturerName())
+                    .contactPhone(entity.getContactPhone())
+                    .country(entity.getCountry()).build();
+
+            manufacturerStorage.put(manufacturerToSave.getManufacturerId(), manufacturerToSave);
+            return Optional.of(manufacturerToSave);
         }
         return Optional.empty();
     }
@@ -75,15 +94,6 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
                 .collect(Collectors.toList());
     }
 
-//    /**
-//     * Проверить существование производителя с таким названием
-//     */
-//    @Override
-//    public boolean existsByName(String name) {
-//        return manufacturerStorage.values().stream()
-//                .anyMatch(manufacturer -> manufacturer.getManufacturerName().equalsIgnoreCase(name));
-//    }
-
     /**
      * Найти производителей по телефону
      */
@@ -99,6 +109,9 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
      */
     @Override
     public Optional<Manufacturer> updatePhone(Long manufacturerId, String newPhone) {
+        if (findByPhone(newPhone).isPresent()) {
+            return Optional.empty();
+        }
         return findById(manufacturerId)
                 .map(manufacturer -> {
                     Manufacturer updated = Manufacturer.builder()
