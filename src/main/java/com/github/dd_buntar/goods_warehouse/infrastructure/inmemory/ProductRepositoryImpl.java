@@ -12,7 +12,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     private final AtomicLong idCounter = new AtomicLong(1);
 
     @Override
-    public Product create(Product entity) {
+    public Optional<Product> create(Product entity) {
         Long nextId = idCounter.getAndIncrement();
 
         Product newProduct = Product.builder()
@@ -24,7 +24,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .build();
 
         productStorage.put(nextId, newProduct);
-        return newProduct;
+        return Optional.of(newProduct);
     }
 
     @Override

@@ -12,7 +12,7 @@ public class StorehouseRepositoryImpl implements StorehouseRepository {
     private final AtomicLong idCounter = new AtomicLong(1);
 
     @Override
-    public Storehouse create(Storehouse entity) {
+    public Optional<Storehouse> create(Storehouse entity) {
         Long nextId = idCounter.getAndIncrement();
 
         Storehouse newStorehouse = Storehouse.builder()
@@ -23,7 +23,7 @@ public class StorehouseRepositoryImpl implements StorehouseRepository {
                 .build();
 
         storehouseStorage.put(nextId, newStorehouse);
-        return newStorehouse;
+        return Optional.of(newStorehouse);
     }
 
     @Override

@@ -13,7 +13,7 @@ public class ShipmentRepositoryImpl implements ShipmentRepository {
     private final AtomicLong idCounter = new AtomicLong(1);
 
     @Override
-    public Shipment create(Shipment entity) {
+    public Optional<Shipment> create(Shipment entity) {
         Long nextId = idCounter.getAndIncrement();
 
         Shipment newShipment = Shipment.builder()
@@ -27,7 +27,7 @@ public class ShipmentRepositoryImpl implements ShipmentRepository {
                 .build();
 
         shipmentStorage.put(nextId, newShipment);
-        return newShipment;
+        return Optional.of(newShipment);
     }
 
     @Override
@@ -68,17 +68,6 @@ public class ShipmentRepositoryImpl implements ShipmentRepository {
                 .collect(Collectors.toList());
     }
 
-//    /**
-//     * Найти просроченные поставки ???
-//     */
-//    @Override
-//    public List<Shipment> findExpiredShipments(LocalDateTime currentDate) {
-//        return shipmentStorage.values().stream()
-//                .filter(shipment -> shipment.getExpiryDate() != null)
-//                .filter(shipment -> shipment.getExpiryDate().isBefore(currentDate))
-//                .collect(Collectors.toList());
-//    }
-
     /**
      * Найти поставки по дате производства
      */
@@ -100,6 +89,17 @@ public class ShipmentRepositoryImpl implements ShipmentRepository {
                 .filter(shipment -> shipment.getArrivalDate().toLocalDate().equals(arrivalDate.toLocalDate()))
                 .collect(Collectors.toList());
     }
+
+    //    /**
+//     * Найти просроченные поставки ???
+//     */
+//    @Override
+//    public List<Shipment> findExpiredShipments(LocalDateTime currentDate) {
+//        return shipmentStorage.values().stream()
+//                .filter(shipment -> shipment.getExpiryDate() != null)
+//                .filter(shipment -> shipment.getExpiryDate().isBefore(currentDate))
+//                .collect(Collectors.toList());
+//    }
 
 //    /**
 //     * Найти поставки с наибольшей маржой (разница между продажной и закупочной ценой) ???

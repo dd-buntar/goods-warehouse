@@ -15,7 +15,7 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
     public Optional<StorageLocation> create(StorageLocation entity) {
         Long nextId = idCounter.getAndIncrement();
 
-        if (!findByRackAndShelf(entity.getRackNum(), entity.getShelfNum()).isPresent()) {
+        if (findByRackAndShelf(entity.getRackNum(), entity.getShelfNum()).isPresent()) {
             return Optional.empty();
         }
         StorageLocation newLocation = StorageLocation.builder()
@@ -40,10 +40,6 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
 
     @Override
     public Optional<StorageLocation> update(StorageLocation entity) {
-        if (entity.getLocationId() == null) {
-            return Optional.empty();
-        }
-
         if (storageLocationStorage.containsKey(entity.getLocationId())) {
             Long id = entity.getLocationId();
             StorageLocation curEntity = storageLocationStorage.get(id);
@@ -52,12 +48,18 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
                 return Optional.of(curEntity);
             }
 
-            if (!findByRackAndShelf(entity.getRackNum(), entity.getShelfNum()).isPresent()) {
+            if (findByRackAndShelf(entity.getRackNum(), entity.getShelfNum()).isPresent()) {
                 return Optional.empty();
             }
 
-            storageLocationStorage.put(entity.getLocationId(), entity);
-            return Optional.of(entity);
+            StorageLocation locationToSave = StorageLocation.builder()
+                    .locationId(entity.getLocationId())
+                    .rackNum(entity.getRackNum())
+                    .shelfNum(entity.getShelfNum())
+                    .build();
+
+            storageLocationStorage.put(locationToSave.getLocationId(), locationToSave);
+            return Optional.of(locationToSave);
         }
         return Optional.empty();
     }
