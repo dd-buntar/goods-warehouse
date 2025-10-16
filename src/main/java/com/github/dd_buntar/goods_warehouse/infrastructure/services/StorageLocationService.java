@@ -2,6 +2,7 @@ package com.github.dd_buntar.goods_warehouse.infrastructure.services;
 
 import com.github.dd_buntar.goods_warehouse.domain.entities.StorageLocation;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.StorageLocationRepository;
+import lombok.NonNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,17 +16,15 @@ public class StorageLocationService {
     }
 
     public Optional<StorageLocation> createStorageLocation(StorageLocation storageLocation) {
-        validateRackNum(storageLocation.getRackNum());
-        validateShelfNum(storageLocation.getShelfNum());
-
-        if (!storageLocationRepository.create(storageLocation).isPresent()) {
+        validateLocation(storageLocation);
+        Optional<StorageLocation> curLocation = storageLocationRepository.create(storageLocation);
+        if (!curLocation.isPresent()) {
             throw new IllegalArgumentException("Такой стеллаж и полка уже существуют");
         }
-        return storageLocationRepository.create(storageLocation);
+        return curLocation;
     }
 
-    public Optional<StorageLocation> findById(final Long id) {
-        validateLocationId(id);
+    public Optional<StorageLocation> findById(@NonNull final Long id) {
         return storageLocationRepository.findById(id);
     }
 
@@ -34,14 +33,17 @@ public class StorageLocationService {
     }
 
     public Optional<StorageLocation> update(final StorageLocation storageLocation) {
-        validateLocationId(storageLocation.getLocationId());
-        validateRackNum(storageLocation.getRackNum());
-        validateShelfNum(storageLocation.getShelfNum());
-        return storageLocationRepository.update(storageLocation);
+        validateLocation(storageLocation);
+
+        Optional<StorageLocation> curLocation = storageLocationRepository.update(storageLocation);
+        if (!curLocation.isPresent()) {
+            throw new IllegalArgumentException("Такой стеллаж и полка уже существуют или id нет в хранилище");
+        }
+
+        return curLocation;
     }
 
-    public boolean deleteById(final Long id) {
-        validateLocationId(id);
+    public boolean deleteById(@NonNull final Long id) {
         return storageLocationRepository.deleteById(id);
     }
 
@@ -74,5 +76,11 @@ public class StorageLocationService {
         if (shelfNum == null || shelfNum <= 0) {
             throw new IllegalArgumentException("Номер полки должен быть положительным числом");
         }
+    }
+
+    private void validateLocation(StorageLocation storageLocation) {
+        validateLocationId(storageLocation.getLocationId());
+        validateRackNum(storageLocation.getRackNum());
+        validateShelfNum(storageLocation.getShelfNum());
     }
 }
