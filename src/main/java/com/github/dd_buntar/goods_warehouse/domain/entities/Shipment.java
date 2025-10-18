@@ -19,5 +19,4 @@ public class Shipment {
     private LocalDateTime productionDate; // дата изготовления
     private LocalDateTime expiryDate; // срок годности
     private LocalDateTime arrivalDate; // дата привоза на склад
-
 }

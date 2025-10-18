@@ -43,8 +43,7 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
         if (storageLocationStorage.containsKey(entity.getLocationId())) {
             Long id = entity.getLocationId();
             StorageLocation curEntity = storageLocationStorage.get(id);
-            if (entity.getRackNum().equals(curEntity.getRackNum()) &&
-                    entity.getShelfNum().equals(curEntity.getShelfNum())) {
+            if (entity.equals(curEntity)) {
                 return Optional.of(curEntity);
             }
 
