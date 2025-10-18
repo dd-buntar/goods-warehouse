@@ -38,13 +38,23 @@ public class StorehouseRepositoryImpl implements StorehouseRepository {
 
     @Override
     public Optional<Storehouse> update(Storehouse entity) {
-        if (entity.getStockId() == null) {
-            return Optional.empty();
-        }
-
         if (storehouseStorage.containsKey(entity.getStockId())) {
-            storehouseStorage.put(entity.getStockId(), entity);
-            return Optional.of(entity);
+            Long id = entity.getStockId();
+            Storehouse curStorehouse = storehouseStorage.get(id);
+
+            if (entity.equals(curStorehouse)) {
+                return Optional.of(curStorehouse);
+            }
+
+            Storehouse storehouseToSave = Storehouse.builder()
+                    .stockId(entity.getStockId())
+                    .shipmentId(entity.getShipmentId())
+                    .locationId(entity.getLocationId())
+                    .quantity(entity.getQuantity())
+                    .build();
+
+            storehouseStorage.put(storehouseToSave.getStockId(), storehouseToSave);
+            return Optional.of(storehouseToSave);
         }
         return Optional.empty();
     }
