@@ -1,34 +1,47 @@
 package com.github.dd_buntar.goods_warehouse.infrastructure.services;
 
 import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
+import com.github.dd_buntar.goods_warehouse.domain.repositories.ProductRepository;
+import lombok.NonNull;
 
 import java.util.List;
 import java.util.Optional;
 
 public class ProductService {
-    public Optional<Product> create(final Product entity) {
+    private final ProductRepository productRepository;
 
-
-        return null;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
-    public Optional<Product> findById(final Long id) {
-        return null;
+
+    public Optional<Product> create(final Product entity) {
+        validateProduct(entity);
+        return productRepository.create(entity);
+    }
+    public Optional<Product> findById(@NonNull final Long id) {
+        return productRepository.findById(id);
     }
     public List<Product> findAll() {
-        return null;
+        return productRepository.findAll();
     }
     public Optional<Product> update(final Product entity) {
-        return null;
+        validateProduct(entity);
+        Optional<Product> curProduct = productRepository.update(entity);
+        if (!curProduct.isPresent()) {
+            throw new IllegalArgumentException("id продукта нет в хранилище");
+        }
+        return curProduct;
     }
-    public boolean deleteById(final Long id) {
-        return false;
+    public boolean deleteById(@NonNull final Long id) {
+        return productRepository.deleteById(id);
     }
 
     public Optional<Product> findByName(String name) {
-        return null;
+        validateProductName(name);
+        return productRepository.findByName(name);
     }
-    public List<Product> findByManufacturerId(Long manufacturerId) {
-        return null;
+    public List<Product> findByManufacturerId(@NonNull Long manufacturerId) {
+        return productRepository.findByManufacturerId(manufacturerId);
     }
 
     private void validateProductId(Long productId) {
@@ -53,5 +66,12 @@ public class ProductService {
         if (weight == null || weight <= 0) {
             throw new IllegalArgumentException("Вес продукта должен быть положительным числом");
         }
+    }
+
+    private void validateProduct(Product product) {
+        validateProductId(product.getProductId());
+        validateProductName(product.getProductName());
+        validateManufacturerId(product.getManufacturerId());
+        validateWeight(product.getWeight());
     }
 }

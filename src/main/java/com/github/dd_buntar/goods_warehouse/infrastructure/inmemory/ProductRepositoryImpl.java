@@ -39,13 +39,24 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Optional<Product> update(Product entity) {
-        if (entity.getProductId() == null) {
-            return Optional.empty();
-        }
-
         if (productStorage.containsKey(entity.getProductId())) {
-            productStorage.put(entity.getProductId(), entity);
-            return Optional.of(entity);
+            Long id = entity.getProductId();
+            Product curProduct = productStorage.get(id);
+
+            if (entity.equals(curProduct)) {
+                return Optional.of(curProduct);
+            }
+
+            Product productToSave = Product.builder()
+                    .productId(entity.getProductId())
+                    .productName(entity.getProductName())
+                    .manufacturerId(entity.getManufacturerId())
+                    .weight(entity.getWeight())
+                    .description(entity.getDescription())
+                    .build();
+
+            productStorage.put(productToSave.getProductId(), productToSave);
+            return Optional.of(productToSave);
         }
         return Optional.empty();
     }
