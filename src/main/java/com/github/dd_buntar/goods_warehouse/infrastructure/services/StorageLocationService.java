@@ -51,9 +51,11 @@ public class StorageLocationService {
         validateRackNum(rackNum);
         return storageLocationRepository.findByRackNumber(rackNum);
     }
+
     public Set<Integer> findAllRackNumbers() {
         return storageLocationRepository.findAllRackNumbers();
     }
+
     public List<Integer> findShelvesByRack(Integer rackNum) {
         validateRackNum(rackNum);
         return storageLocationRepository.findShelvesByRack(rackNum);

@@ -8,5 +8,6 @@ import java.util.Set;
 
 public interface ProductRepository extends Repository<Product, Long>{
     Optional<Product> findByName(String name);
+
     List<Product> findByManufacturerId(Long manufacturerId);
 }

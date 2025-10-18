@@ -48,12 +48,15 @@ public class ManufacturerService {
     public Optional<Manufacturer> findByName(@NonNull String name) {
         return manufacturerRepository.findByName(name);
     }
+
     public List<Manufacturer> findByCountry(@NonNull String country) {
         return manufacturerRepository.findByCountry(country);
     }
+
     public Optional<Manufacturer> findByPhone(@NonNull String phone) {
         return manufacturerRepository.findByPhone(phone);
     }
+
     public Optional<Manufacturer> updatePhone(Long manufacturerId, String newPhone) {
         validateManufacturerId(manufacturerId);
         validateContactPhone(newPhone);

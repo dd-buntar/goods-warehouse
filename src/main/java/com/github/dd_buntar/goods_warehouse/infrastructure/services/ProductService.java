@@ -18,12 +18,15 @@ public class ProductService {
         validateProduct(entity);
         return productRepository.create(entity);
     }
+
     public Optional<Product> findById(@NonNull final Long id) {
         return productRepository.findById(id);
     }
+
     public List<Product> findAll() {
         return productRepository.findAll();
     }
+
     public Optional<Product> update(final Product entity) {
         validateProduct(entity);
         Optional<Product> curProduct = productRepository.update(entity);
@@ -32,6 +35,7 @@ public class ProductService {
         }
         return curProduct;
     }
+
     public boolean deleteById(@NonNull final Long id) {
         return productRepository.deleteById(id);
     }
@@ -40,6 +44,7 @@ public class ProductService {
         validateProductName(name);
         return productRepository.findByName(name);
     }
+
     public List<Product> findByManufacturerId(@NonNull Long manufacturerId) {
         return productRepository.findByManufacturerId(manufacturerId);
     }
