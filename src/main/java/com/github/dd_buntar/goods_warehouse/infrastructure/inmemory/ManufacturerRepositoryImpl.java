@@ -46,9 +46,7 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
             Long id = entity.getManufacturerId();
             Manufacturer curManufacturer = manufacturerStorage.get(id);
 
-            if (entity.getManufacturerName().equals(curManufacturer.getManufacturerName()) &&
-                    entity.getContactPhone().equals(curManufacturer.getContactPhone()) &&
-                    entity.getCountry().equals(curManufacturer.getCountry())) {
+            if (entity.equals(curManufacturer)) {
                 return Optional.of(curManufacturer);
             }
 
