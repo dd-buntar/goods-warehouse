@@ -13,6 +13,10 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Optional<Product> create(Product entity) {
+        if (productStorage.containsKey(entity.getProductId())) {
+            return Optional.empty();
+        }
+
         Long nextId = idCounter.getAndIncrement();
 
         Product newProduct = Product.builder()

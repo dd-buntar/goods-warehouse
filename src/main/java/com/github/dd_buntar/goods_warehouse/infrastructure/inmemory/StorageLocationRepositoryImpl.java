@@ -13,6 +13,10 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
 
     @Override
     public Optional<StorageLocation> create(StorageLocation entity) {
+        if (storageLocationStorage.containsKey(entity.getLocationId())) {
+            return Optional.empty();
+        }
+
         Long nextId = idCounter.getAndIncrement();
 
         if (findByRackAndShelf(entity.getRackNum(), entity.getShelfNum()).isPresent()) {

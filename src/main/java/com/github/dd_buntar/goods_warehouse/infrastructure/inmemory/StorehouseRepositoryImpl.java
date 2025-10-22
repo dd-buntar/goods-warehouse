@@ -13,6 +13,10 @@ public class StorehouseRepositoryImpl implements StorehouseRepository {
 
     @Override
     public Optional<Storehouse> create(Storehouse entity) {
+        if (storehouseStorage.containsKey(entity.getStockId())) {
+            return Optional.empty();
+        }
+
         Long nextId = idCounter.getAndIncrement();
 
         Storehouse newStorehouse = Storehouse.builder()

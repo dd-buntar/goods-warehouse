@@ -14,6 +14,9 @@ public class ShipmentRepositoryImpl implements ShipmentRepository {
 
     @Override
     public Optional<Shipment> create(Shipment entity) {
+        if (shipmentStorage.containsKey(entity.getShipmentId())) {
+            return Optional.empty();
+        }
         Long nextId = idCounter.getAndIncrement();
 
         Shipment newShipment = Shipment.builder()

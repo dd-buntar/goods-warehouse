@@ -13,11 +13,15 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
 
     @Override
     public Optional<Manufacturer> create(Manufacturer entity) {
-        Long nextId = idCounter.getAndIncrement();
+        if (manufacturerStorage.containsKey(entity.getManufacturerId())) {
+            return Optional.empty();
+        }
 
         if (findByPhone(entity.getContactPhone()).isPresent()) {
             return Optional.empty();
         }
+
+        Long nextId = idCounter.getAndIncrement();
 
         Manufacturer newManufacturer = Manufacturer.builder()
                 .manufacturerId(nextId)
