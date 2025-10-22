@@ -6,6 +6,7 @@ import com.github.dd_buntar.goods_warehouse.app.services.ManufacturerService;
 
 import java.util.*;
 
+// allArgs пон
 public class DomainManufacturerService {
     private final ManufacturerService manufacturerService;
     private final DomainProductService domainProductService;
