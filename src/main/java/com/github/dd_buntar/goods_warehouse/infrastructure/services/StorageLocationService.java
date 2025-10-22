@@ -4,6 +4,7 @@ import com.github.dd_buntar.goods_warehouse.domain.entities.StorageLocation;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.StorageLocationRepository;
 import lombok.NonNull;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -73,11 +74,32 @@ public class StorageLocationService {
         if (rackNum == null || rackNum <= 0) {
             throw new IllegalArgumentException("Номер стеллажа должен быть положительным числом");
         }
+        if (rackNum > 100) {
+            throw new IllegalArgumentException("Номер стеллажа не может превышать 100");
+        }
     }
 
     private void validateShelfNum(Integer shelfNum) {
         if (shelfNum == null || shelfNum <= 0) {
             throw new IllegalArgumentException("Номер полки должен быть положительным числом");
+        }
+        if (shelfNum > 50) {
+            throw new IllegalArgumentException("Номер полки не может превышать 50");
+        }
+    }
+
+    private void validateShelfSequence(Integer rackNum, Integer shelfNum) {
+        List<Integer> existingShelves = storageLocationRepository.findShelvesByRack(rackNum);
+
+        // новая полка не должна быть больше существующих более чем на 1
+        if (!existingShelves.isEmpty()) {
+            Integer maxExistingShelf = Collections.max(existingShelves);
+
+            if (shelfNum > maxExistingShelf + 1) {
+                throw new IllegalArgumentException(
+                        "Новая полка (" + shelfNum + ") не может быть больше максимальной существующей (" +
+                                maxExistingShelf + ") более чем на 1");
+            }
         }
     }
 
@@ -85,5 +107,6 @@ public class StorageLocationService {
         validateLocationId(storageLocation.getLocationId());
         validateRackNum(storageLocation.getRackNum());
         validateShelfNum(storageLocation.getShelfNum());
+        validateShelfSequence(storageLocation.getRackNum(), storageLocation.getShelfNum());
     }
 }

@@ -1,12 +1,10 @@
 package com.github.dd_buntar.goods_warehouse.infrastructure.services;
 
 import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
-import com.github.dd_buntar.goods_warehouse.domain.entities.StorageLocation;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.ManufacturerRepository;
 import lombok.NonNull;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ManufacturerService {
     private final ManufacturerRepository manufacturerRepository;
@@ -15,9 +13,9 @@ public class ManufacturerService {
         this.manufacturerRepository = manufacturerRepository;
     }
 
-    Optional<Manufacturer> create(final Manufacturer manufacturer) {
+    public Optional<Manufacturer> create(final Manufacturer manufacturer) {
         validateManufacturerName(manufacturer.getManufacturerName());
-        validateContactPhone(manufacturer.getContactPhone());
+        validatePhoneFormat(manufacturer.getContactPhone(), manufacturer.getCountry());
         validateCountry(manufacturer.getCountry());
         Optional<Manufacturer> curManufacturer = manufacturerRepository.create(manufacturer);
         if (!curManufacturer.isPresent()) {
@@ -26,15 +24,15 @@ public class ManufacturerService {
         return curManufacturer;
     }
 
-    Optional<Manufacturer> findById(@NonNull final Long id) {
+    public Optional<Manufacturer> findById(@NonNull final Long id) {
         return manufacturerRepository.findById(id);
     }
 
-    List<Manufacturer> findAll() {
+    public List<Manufacturer> findAll() {
         return manufacturerRepository.findAll();
     }
 
-    Optional<Manufacturer> update(final Manufacturer manufacturer) {
+    public Optional<Manufacturer> update(final Manufacturer manufacturer) {
         validateManufacturer(manufacturer);
         Optional<Manufacturer> curManufacturer = manufacturerRepository.update(manufacturer);
         if (!curManufacturer.isPresent()) {
@@ -43,7 +41,7 @@ public class ManufacturerService {
         return curManufacturer;
     }
 
-    boolean deleteById(@NonNull final Long id) {
+    public boolean deleteById(@NonNull final Long id) {
         return manufacturerRepository.deleteById(id);
     }
 
@@ -61,7 +59,7 @@ public class ManufacturerService {
 
     public Optional<Manufacturer> updatePhone(Long manufacturerId, String newPhone) {
         validateManufacturerId(manufacturerId);
-        validateContactPhone(newPhone);
+        validatePhoneFormat(newPhone);
         Optional<Manufacturer> curManufacturer = manufacturerRepository.updatePhone(manufacturerId, newPhone);
         if (!curManufacturer.isPresent()) {
             throw new IllegalArgumentException("Производитель с таким номером телефона уже существует или id нет в хранилище");
@@ -81,21 +79,26 @@ public class ManufacturerService {
         }
     }
 
-    private void validateContactPhone(String contactPhone) {
+    private void validatePhoneFormat(String contactPhone, String country) {
         if (contactPhone == null || contactPhone.isEmpty()) {
             throw new IllegalArgumentException("Телефон производителя не должен быть пустой строкой");
         }
-
-        if (!contactPhone.matches("\\d+")) {
-            throw new IllegalArgumentException("Телефон должен содержать только цифры");
+        if (!contactPhone.matches("^\\+?[0-9\\s\\-]+$")) {
+            throw new IllegalArgumentException("Номер телефона содержит недопустимые символы");
         }
-
-        if (contactPhone.length() != 11) {
-            throw new IllegalArgumentException("Телефон должен состоять из 11 цифр");
-        }
-
-        if (contactPhone.charAt(0) != '8') {
-            throw new IllegalArgumentException("Телефон должен начинаться с цифры 8");
+        switch (country.toLowerCase()) {
+            case "россия":
+                if (!contactPhone.matches("^\\+7[0-9]{10}$")) {
+                    throw new IllegalArgumentException(
+                            "Для России номер телефона должен быть в формате +7XXXXXXXXXX");
+                }
+                break;
+            case "беларусь":
+                if (!contactPhone.matches("^\\+375[0-9]{9}$")) {
+                    throw new IllegalArgumentException(
+                            "Для Беларуси номер телефона должен быть в формате +375XXXXXXXXX");
+                }
+                break;
         }
     }
 
@@ -103,12 +106,25 @@ public class ManufacturerService {
         if (country == null || country.isEmpty()) {
             throw new IllegalArgumentException("Страна производителя не должна быть пустой строкой");
         }
+        if (country.length() > 50) {
+            throw new IllegalArgumentException("Название страны не может превышать 50 символов");
+        }
+        if (!country.matches("^[а-яА-ЯёЁ\\s-]+$")) {
+            throw new IllegalArgumentException("Название страны содержит недопустимые символы");
+        }
+
+        Set<String> countries = new HashSet<>(Arrays.asList("Россия", "Беларусь"));
+        if (!countries.contains(country)) {
+            throw new IllegalArgumentException(
+                    "Страна производителя не входит в список поставщиков:" +
+                            "\n 1. Россия \n 2. Беларусь"); // чтобы не чисто вбитые Россия и Беларусь
+        }
     }
 
     private void validateManufacturer(Manufacturer manufacturer) {
         validateManufacturerId(manufacturer.getManufacturerId());
         validateManufacturerName(manufacturer.getManufacturerName());
-        validateContactPhone(manufacturer.getContactPhone());
+        validatePhoneFormat(manufacturer.getContactPhone(), manufacturer.getCountry());
         validateCountry(manufacturer.getCountry());
     }
 }
