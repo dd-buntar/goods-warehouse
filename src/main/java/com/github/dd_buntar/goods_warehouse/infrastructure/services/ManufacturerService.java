@@ -16,7 +16,9 @@ public class ManufacturerService {
     }
 
     Optional<Manufacturer> create(final Manufacturer manufacturer) {
-        validateManufacturer(manufacturer);
+        validateManufacturerName(manufacturer.getManufacturerName());
+        validateContactPhone(manufacturer.getContactPhone());
+        validateCountry(manufacturer.getCountry());  // везде так !!!!!!!!
         Optional<Manufacturer> curManufacturer = manufacturerRepository.create(manufacturer);
         if (!curManufacturer.isPresent()) {
             throw new IllegalArgumentException("Производитель с таким номером уже существует");
@@ -82,6 +84,18 @@ public class ManufacturerService {
     private void validateContactPhone(String contactPhone) {
         if (contactPhone == null || contactPhone.isEmpty()) {
             throw new IllegalArgumentException("Телефон производителя не должен быть пустой строкой");
+        }
+
+        if (!contactPhone.matches("\\d+")) {
+            throw new IllegalArgumentException("Телефон должен содержать только цифры");
+        }
+
+        if (contactPhone.length() != 11) {
+            throw new IllegalArgumentException("Телефон должен состоять из 11 цифр");
+        }
+
+        if (contactPhone.charAt(0) != '8') {
+            throw new IllegalArgumentException("Телефон должен начинаться с цифры 8");
         }
     }
 

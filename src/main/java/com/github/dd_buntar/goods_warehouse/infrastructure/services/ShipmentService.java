@@ -17,7 +17,11 @@ public class ShipmentService {
 
     public Optional<Shipment> create(final Shipment entity) {
         validateShipment(entity);
-        return shipmentRepository.create(entity);
+        Optional<Shipment> curShipment = shipmentRepository.create(entity);
+        if (!curShipment.isPresent()) {
+            throw new IllegalArgumentException("Запись с таким id уже существует");
+        }
+        return curShipment;
     }
 
     public Optional<Shipment> findById(@NonNull final Long id) {
@@ -66,7 +70,7 @@ public class ShipmentService {
         }
     }
 
-    private void validatePrices(Integer purchasePrice, Integer salePrice) {
+    private void validatePrices(Integer purchasePrice, Integer salePrice) {  // всё в отдельные ифы
         if (purchasePrice == null || salePrice == null || salePrice < purchasePrice || purchasePrice <= 0) {
             throw new IllegalArgumentException("Убедитесь, что цена продажи >= закупочная цена");
         }

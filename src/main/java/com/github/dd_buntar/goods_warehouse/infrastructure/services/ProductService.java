@@ -16,7 +16,11 @@ public class ProductService {
 
     public Optional<Product> create(final Product entity) {
         validateProduct(entity);
-        return productRepository.create(entity);
+        Optional<Product> curProduct = productRepository.create(entity);
+        if (!curProduct.isPresent()) {
+            throw new IllegalArgumentException("Запись с таким id уже существует");
+        }
+        return curProduct;
     }
 
     public Optional<Product> findById(@NonNull final Long id) {
