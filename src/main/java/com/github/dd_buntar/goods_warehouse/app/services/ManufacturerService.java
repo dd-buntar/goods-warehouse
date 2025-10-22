@@ -122,7 +122,7 @@ public class ManufacturerService {
         if (!COUNTRIES.contains(country)) {
             throw new IllegalArgumentException(
                     "Страна производителя не входит в список поставщиков:" +
-                            "\n 1. " + COUNTRIES.toArray()[1] + " \n 2. " + COUNTRIES.toArray()[2]);
+                            "\n 1. " + COUNTRIES.toArray()[0] + " \n 2. " + COUNTRIES.toArray()[1]);
         }
     }
 

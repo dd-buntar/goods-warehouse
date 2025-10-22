@@ -1,6 +1,6 @@
 package com.github.dd_buntar.goods_warehouse.app.cli.cmds;
 
-import com.github.dd_buntar.goods_warehouse.app.cli.cmds.manufacturer.CreateManufacturerCommand;
+import com.github.dd_buntar.goods_warehouse.app.cli.cmds.manufacturer.*;
 import com.github.dd_buntar.goods_warehouse.app.services.domain.*;
 import lombok.AllArgsConstructor;
 
@@ -16,10 +16,19 @@ public class CommandFactory {
 
     public Command create(String[] args) {
         String commandName = args[0];
-//        Command cmd;
+        String[] commandArgs = Arrays.copyOfRange(args, 1, args.length);
+
         switch (commandName) {
             case "manufacturer-create":
-                return new CreateManufacturerCommand(Arrays.copyOfRange(args, 1, args.length), manufacturerService);
+                return new CreateManufacturerCommand(commandArgs, manufacturerService);
+            case "manufacturer-findAll":
+                return new FindAllManufacturerCommand(commandArgs, manufacturerService);
+            case "manufacturer-deleteById":
+                return new DeleteByIdManufacturerCommand(commandArgs, manufacturerService);
+            case "manufacturer-findById":
+                return new FindByIdManufacturerCommand(commandArgs, manufacturerService);
+            case "manufacturer-update":
+                return new UpdateManufacturerCommand(commandArgs, manufacturerService);
             default: return null; // потом будет хелп
         }
     }
