@@ -1,9 +1,9 @@
-package com.github.dd_buntar.goods_warehouse.infrastructure.services.domain;
+package com.github.dd_buntar.goods_warehouse.app.services.domain;
 
 import com.github.dd_buntar.goods_warehouse.domain.entities.Shipment;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Storehouse;
-import com.github.dd_buntar.goods_warehouse.infrastructure.services.ProductService;
-import com.github.dd_buntar.goods_warehouse.infrastructure.services.ShipmentService;
+import com.github.dd_buntar.goods_warehouse.app.services.ProductService;
+import com.github.dd_buntar.goods_warehouse.app.services.ShipmentService;
 
 import java.time.LocalDateTime;
 import java.util.List;

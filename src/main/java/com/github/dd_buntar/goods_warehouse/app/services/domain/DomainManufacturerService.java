@@ -1,8 +1,8 @@
-package com.github.dd_buntar.goods_warehouse.infrastructure.services.domain;
+package com.github.dd_buntar.goods_warehouse.app.services.domain;
 
 import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
-import com.github.dd_buntar.goods_warehouse.infrastructure.services.ManufacturerService;
+import com.github.dd_buntar.goods_warehouse.app.services.ManufacturerService;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package com.github.dd_buntar.goods_warehouse.infrastructure.services;
+package com.github.dd_buntar.goods_warehouse.app.services;
 
 import com.github.dd_buntar.goods_warehouse.domain.entities.Storehouse;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.StorehouseRepository;

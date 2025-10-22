@@ -1,9 +1,9 @@
-package com.github.dd_buntar.goods_warehouse.infrastructure.services.domain;
+package com.github.dd_buntar.goods_warehouse.app.services.domain;
 
 import com.github.dd_buntar.goods_warehouse.domain.entities.Storehouse;
-import com.github.dd_buntar.goods_warehouse.infrastructure.services.ShipmentService;
-import com.github.dd_buntar.goods_warehouse.infrastructure.services.StorageLocationService;
-import com.github.dd_buntar.goods_warehouse.infrastructure.services.StorehouseService;
+import com.github.dd_buntar.goods_warehouse.app.services.ShipmentService;
+import com.github.dd_buntar.goods_warehouse.app.services.StorageLocationService;
+import com.github.dd_buntar.goods_warehouse.app.services.StorehouseService;
 
 import java.util.List;
 import java.util.Optional;
