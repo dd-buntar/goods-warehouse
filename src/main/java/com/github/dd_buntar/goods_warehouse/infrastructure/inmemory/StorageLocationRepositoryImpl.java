@@ -51,8 +51,11 @@ public class StorageLocationRepositoryImpl implements StorageLocationRepository 
                 return Optional.of(curEntity);
             }
 
-            if (findByRackAndShelf(entity.getRackNum(), entity.getShelfNum()).isPresent()) {
-                return Optional.empty();
+            Optional<StorageLocation> sl = findByRackAndShelf(entity.getRackNum(), entity.getShelfNum());
+            if (sl.isPresent()
+                    && !sl.get().getShelfNum().equals(curEntity.getShelfNum())
+                    && !sl.get().getRackNum().equals(curEntity.getRackNum())) {
+                return sl;
             }
 
             StorageLocation locationToSave = StorageLocation.builder()

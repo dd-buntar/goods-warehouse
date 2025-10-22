@@ -36,12 +36,13 @@ public class StorageLocationService {
 
     public Optional<StorageLocation> update(final StorageLocation storageLocation) {
         validateLocation(storageLocation);
-
         Optional<StorageLocation> curLocation = storageLocationRepository.update(storageLocation);
         if (!curLocation.isPresent()) {
-            throw new IllegalArgumentException("Такой стеллаж и полка уже существуют или id нет в хранилище");
+            throw new IllegalArgumentException("Такого id нет в хранилище");
         }
-
+        if (!curLocation.equals(storageLocation)) {
+            throw new IllegalArgumentException("Такой стеллаж и полка уже существуют");
+        }
         return curLocation;
     }
 

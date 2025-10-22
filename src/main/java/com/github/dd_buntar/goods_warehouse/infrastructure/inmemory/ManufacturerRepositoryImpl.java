@@ -54,9 +54,9 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
                 return Optional.of(curManufacturer);
             }
 
-            Optional<Manufacturer> m = findByPhone(entity.getContactPhone());
-            if (m.isPresent() && !m.get().getContactPhone().equals(curManufacturer.getContactPhone())) {
-                return Optional.empty();
+            Optional<Manufacturer> mf = findByPhone(entity.getContactPhone());
+            if (mf.isPresent() && !mf.get().getContactPhone().equals(curManufacturer.getContactPhone())) {
+                return mf;
             }
 
             Manufacturer manufacturerToSave = Manufacturer.builder()

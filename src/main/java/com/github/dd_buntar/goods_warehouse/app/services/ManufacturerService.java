@@ -26,7 +26,11 @@ public class ManufacturerService {
     }
 
     public Optional<Manufacturer> findById(@NonNull final Long id) {
-        return manufacturerRepository.findById(id);
+        Optional<Manufacturer> manufacturer = manufacturerRepository.findById(id);
+        if (!manufacturer.isPresent()) {
+            throw new IllegalArgumentException("Производителя с таким id не существует");
+        }
+        return manufacturer;
     }
 
     public List<Manufacturer> findAll() {
@@ -37,7 +41,10 @@ public class ManufacturerService {
         validateManufacturer(manufacturer);
         Optional<Manufacturer> curManufacturer = manufacturerRepository.update(manufacturer);
         if (!curManufacturer.isPresent()) {
-            throw new IllegalArgumentException("Производитель с таким номером телефона уже существует или id нет в хранилище");
+            throw new IllegalArgumentException("Такого id нет в хранилище");
+        }
+        if (!curManufacturer.equals(manufacturer)) {
+            throw new IllegalArgumentException("Производитель с таким номером телефона уже существует");
         }
         return curManufacturer;
     }
