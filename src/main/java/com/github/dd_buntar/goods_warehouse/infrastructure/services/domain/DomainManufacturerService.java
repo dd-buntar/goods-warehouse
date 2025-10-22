@@ -3,7 +3,6 @@ package com.github.dd_buntar.goods_warehouse.infrastructure.services.domain;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
 import com.github.dd_buntar.goods_warehouse.infrastructure.services.ManufacturerService;
-import com.github.dd_buntar.goods_warehouse.infrastructure.services.ShipmentService;
 
 import java.util.*;
 

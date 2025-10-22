@@ -3,7 +3,6 @@ package com.github.dd_buntar.goods_warehouse.infrastructure.services.domain;
 import com.github.dd_buntar.goods_warehouse.domain.entities.StorageLocation;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Storehouse;
 import com.github.dd_buntar.goods_warehouse.infrastructure.services.StorageLocationService;
-import com.github.dd_buntar.goods_warehouse.infrastructure.services.StorehouseService;
 
 import java.util.List;
 import java.util.Optional;

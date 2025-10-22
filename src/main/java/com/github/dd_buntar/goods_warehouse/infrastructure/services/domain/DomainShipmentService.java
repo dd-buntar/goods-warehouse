@@ -4,7 +4,6 @@ import com.github.dd_buntar.goods_warehouse.domain.entities.Shipment;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Storehouse;
 import com.github.dd_buntar.goods_warehouse.infrastructure.services.ProductService;
 import com.github.dd_buntar.goods_warehouse.infrastructure.services.ShipmentService;
-import com.github.dd_buntar.goods_warehouse.infrastructure.services.StorehouseService;
 
 import java.time.LocalDateTime;
 import java.util.List;

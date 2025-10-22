@@ -7,6 +7,7 @@ import lombok.NonNull;
 import java.util.*;
 
 public class ManufacturerService {
+    private static final Set<String> COUNTRIES = new HashSet<>(Arrays.asList("Россия", "Беларусь"));
     private final ManufacturerRepository manufacturerRepository;
 
     public ManufacturerService(ManufacturerRepository manufacturerRepository) {
@@ -58,11 +59,16 @@ public class ManufacturerService {
     }
 
     public Optional<Manufacturer> updatePhone(Long manufacturerId, String newPhone) {
+        Optional<Manufacturer> manufacturer = manufacturerRepository.findById(manufacturerId);
+        if (!manufacturer.isPresent()) {
+            throw new IllegalArgumentException("Производителя с таким id не существует");
+        }
+
         validateManufacturerId(manufacturerId);
-        validatePhoneFormat(newPhone);
+        validatePhoneFormat(newPhone, manufacturer.get().getCountry());
         Optional<Manufacturer> curManufacturer = manufacturerRepository.updatePhone(manufacturerId, newPhone);
         if (!curManufacturer.isPresent()) {
-            throw new IllegalArgumentException("Производитель с таким номером телефона уже существует или id нет в хранилище");
+            throw new IllegalArgumentException("Производитель с таким номером телефона уже существует");
         }
         return curManufacturer;
     }
@@ -113,11 +119,10 @@ public class ManufacturerService {
             throw new IllegalArgumentException("Название страны содержит недопустимые символы");
         }
 
-        Set<String> countries = new HashSet<>(Arrays.asList("Россия", "Беларусь"));
-        if (!countries.contains(country)) {
+        if (!COUNTRIES.contains(country)) {
             throw new IllegalArgumentException(
                     "Страна производителя не входит в список поставщиков:" +
-                            "\n 1. Россия \n 2. Беларусь"); // чтобы не чисто вбитые Россия и Беларусь
+                            "\n 1. " + COUNTRIES.toArray()[1] + " \n 2. " + COUNTRIES.toArray()[2]);
         }
     }
 
