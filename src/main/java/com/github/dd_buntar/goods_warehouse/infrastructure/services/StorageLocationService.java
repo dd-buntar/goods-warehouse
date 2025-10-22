@@ -16,7 +16,8 @@ public class StorageLocationService {
     }
 
     public Optional<StorageLocation> createStorageLocation(StorageLocation storageLocation) {
-        validateLocation(storageLocation);
+        validateRackNum(storageLocation.getRackNum());
+        validateShelfNum(storageLocation.getShelfNum());
         Optional<StorageLocation> curLocation = storageLocationRepository.create(storageLocation);
         if (!curLocation.isPresent()) {
             throw new IllegalArgumentException("Такой стеллаж и полка уже существуют");

@@ -18,7 +18,7 @@ public class ManufacturerService {
     Optional<Manufacturer> create(final Manufacturer manufacturer) {
         validateManufacturerName(manufacturer.getManufacturerName());
         validateContactPhone(manufacturer.getContactPhone());
-        validateCountry(manufacturer.getCountry());  // везде так !!!!!!!!
+        validateCountry(manufacturer.getCountry());
         Optional<Manufacturer> curManufacturer = manufacturerRepository.create(manufacturer);
         if (!curManufacturer.isPresent()) {
             throw new IllegalArgumentException("Производитель с таким номером уже существует");

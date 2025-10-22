@@ -15,7 +15,9 @@ public class StorehouseService {
     }
 
     public Optional<Storehouse> create(final Storehouse entity) {
-        validateStorehouse(entity);
+        validateShipmentId(entity.getShipmentId());
+        validateLocationId(entity.getLocationId());
+        validateQuantity(entity.getQuantity());
         Optional<Storehouse> curStorehouse = storehouseRepository.create(entity);
         if (!curStorehouse.isPresent()) {
             throw new IllegalArgumentException("Запись с таким id уже существует");

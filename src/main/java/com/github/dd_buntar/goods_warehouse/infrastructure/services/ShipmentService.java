@@ -16,7 +16,15 @@ public class ShipmentService {
     }
 
     public Optional<Shipment> create(final Shipment entity) {
-        validateShipment(entity);
+        validateProductId(entity.getProductId());
+
+        validatePrices(entity.getPurchasePrice(),
+                entity.getSalePrice());
+
+        validateDates(entity.getProductionDate(),
+                entity.getExpiryDate(),
+                entity.getArrivalDate());
+
         Optional<Shipment> curShipment = shipmentRepository.create(entity);
         if (!curShipment.isPresent()) {
             throw new IllegalArgumentException("Запись с таким id уже существует");
@@ -70,8 +78,14 @@ public class ShipmentService {
         }
     }
 
-    private void validatePrices(Integer purchasePrice, Integer salePrice) {  // всё в отдельные ифы
-        if (purchasePrice == null || salePrice == null || salePrice < purchasePrice || purchasePrice <= 0) {
+    private void validatePrices(Integer purchasePrice, Integer salePrice) {
+        if (purchasePrice == null || purchasePrice <= 0) {
+            throw new IllegalArgumentException("Закупочная цена должна быть больше нуля");
+        }
+        if (salePrice == null || salePrice <= 0) {
+            throw new IllegalArgumentException("Цена продажи должна быть больше нуля");
+        }
+        if (salePrice < purchasePrice) {
             throw new IllegalArgumentException("Убедитесь, что цена продажи >= закупочная цена");
         }
     }

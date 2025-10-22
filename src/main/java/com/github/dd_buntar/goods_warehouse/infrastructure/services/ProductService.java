@@ -32,7 +32,9 @@ public class ProductService {
     }
 
     public Optional<Product> update(final Product entity) {
-        validateProduct(entity);
+        validateProductName(entity.getProductName());
+        validateManufacturerId(entity.getManufacturerId());
+        validateWeight(entity.getWeight());
         Optional<Product> curProduct = productRepository.update(entity);
         if (!curProduct.isPresent()) {
             throw new IllegalArgumentException("id продукта нет в хранилище");
