@@ -2,6 +2,7 @@ package com.github.dd_buntar.goods_warehouse.app.cli.cmds;
 
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.manufacturer.*;
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.product.*;
+import com.github.dd_buntar.goods_warehouse.app.cli.cmds.shipment.*;
 import com.github.dd_buntar.goods_warehouse.app.services.domain.*;
 import lombok.AllArgsConstructor;
 
@@ -41,6 +42,17 @@ public class CommandFactory {
                 return new FindByIdProductCommand(commandArgs, productService);
             case "product-update":
                 return new UpdateProductCommand(commandArgs, productService);
+
+            case "shipment-create":
+                return new CreateShipmentCommand(commandArgs, shipmentService);
+            case "shipment-findAll":
+                return new FindAllShipmentCommand(commandArgs, shipmentService);
+            case "shipment-deleteById":
+                return new DeleteByIdShipmentCommand(commandArgs, shipmentService);
+            case "shipment-findById":
+                return new FindByIdShipmentCommand(commandArgs, shipmentService);
+            case "shipment-update":
+                return new UpdateShipmentCommand(commandArgs, shipmentService);
             default: return null; // потом будет хелп
         }
     }
