@@ -4,6 +4,7 @@ import com.github.dd_buntar.goods_warehouse.app.cli.cmds.location.*;
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.manufacturer.*;
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.product.*;
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.shipment.*;
+import com.github.dd_buntar.goods_warehouse.app.cli.cmds.storehouse.*;
 import com.github.dd_buntar.goods_warehouse.app.services.domain.*;
 import lombok.AllArgsConstructor;
 
@@ -66,7 +67,22 @@ public class CommandFactory {
             case "location-update":
                 return new UpdateStorageLocationCommand(commandArgs, storageLocationService);
 
-            default: return null; // потом будет хелп
+            case "storehouse-create":
+                return new CreateStorehouseCommand(commandArgs, storehouseService);
+            case "storehouse-findAll":
+                return new FindAllStorehouseCommand(commandArgs, storehouseService);
+            case "storehouse-deleteById":
+                return new DeleteByIdStorehouseCommand(commandArgs, storehouseService);
+            case "storehouse-findById":
+                return new FindByIdStorehouseCommand(commandArgs, storehouseService);
+            case "storehouse-update":
+                return new UpdateStorehouseCommand(commandArgs, storehouseService);
+
+            case "exit":
+                break;
+
+            default:
+                return new MessageCommand();
         }
     }
 }

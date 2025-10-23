@@ -1,0 +1,30 @@
+package com.github.dd_buntar.goods_warehouse.app.cli.cmds.storehouse;
+
+import com.github.dd_buntar.goods_warehouse.app.cli.cmds.Command;
+import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainStorageLocationService;
+import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainStorehouseService;
+import lombok.AllArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+public class DeleteByIdStorehouseCommand implements Command {
+    public static final String HELP_MESSAGE = "storehouse-deleteById (id)";
+
+    @Setter
+    private String[] args;
+    private DomainStorehouseService service;
+
+    @Override
+    public void execute() {
+        if (args.length != 1) {
+            throw new IllegalArgumentException("Неправильное количество аргументов");
+        }
+        Long id = Long.parseLong(args[0]);
+        service.deleteById(id);
+    }
+
+    @Override
+    public String getHelp() {
+        return HELP_MESSAGE;
+    }
+}
