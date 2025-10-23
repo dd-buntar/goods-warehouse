@@ -1,5 +1,6 @@
 package com.github.dd_buntar.goods_warehouse.app.cli.cmds;
 
+import com.github.dd_buntar.goods_warehouse.app.cli.cmds.location.*;
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.manufacturer.*;
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.product.*;
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.shipment.*;
@@ -53,6 +54,18 @@ public class CommandFactory {
                 return new FindByIdShipmentCommand(commandArgs, shipmentService);
             case "shipment-update":
                 return new UpdateShipmentCommand(commandArgs, shipmentService);
+
+            case "location-create":
+                return new CreateStorageLocationCommand(commandArgs, storageLocationService);
+            case "location-findAll":
+                return new FindAllStorageLocationCommand(commandArgs, storageLocationService);
+            case "location-deleteById":
+                return new DeleteByIdStorageLocationCommand(commandArgs, storageLocationService);
+            case "location-findById":
+                return new FindByIdStorageLocationCommand(commandArgs, storageLocationService);
+            case "location-update":
+                return new UpdateStorageLocationCommand(commandArgs, storageLocationService);
+
             default: return null; // потом будет хелп
         }
     }
