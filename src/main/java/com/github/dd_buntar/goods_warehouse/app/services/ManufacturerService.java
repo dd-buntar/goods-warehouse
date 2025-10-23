@@ -34,7 +34,11 @@ public class ManufacturerService {
     }
 
     public List<Manufacturer> findAll() {
-        return manufacturerRepository.findAll();
+        List<Manufacturer> manufacturers = manufacturerRepository.findAll();
+        if (manufacturers.isEmpty()) {
+            throw new IllegalArgumentException("Таблица пустая");
+        }
+        return manufacturers;
     }
 
     public Optional<Manufacturer> update(final Manufacturer manufacturer) {
@@ -50,19 +54,35 @@ public class ManufacturerService {
     }
 
     public boolean deleteById(@NonNull final Long id) {
-        return manufacturerRepository.deleteById(id);
+        boolean isDeleted = manufacturerRepository.deleteById(id);
+        if (!isDeleted) {
+            throw new IllegalArgumentException("Производителя с таким id не существует");
+        }
+        return isDeleted;
     }
 
     public Optional<Manufacturer> findByName(@NonNull String name) {
-        return manufacturerRepository.findByName(name);
+        Optional<Manufacturer> manufacturer = manufacturerRepository.findByName(name);
+        if (!manufacturer.isPresent()) {
+            throw new IllegalArgumentException("Производителя с таким именем не существует");
+        }
+        return manufacturer;
     }
 
     public List<Manufacturer> findByCountry(@NonNull String country) {
-        return manufacturerRepository.findByCountry(country);
+        List<Manufacturer> manufacturers = manufacturerRepository.findByCountry(country);
+        if (manufacturers.isEmpty()) {
+            throw new IllegalArgumentException("Производителей с такой страной не существует");
+        }
+        return manufacturers;
     }
 
     public Optional<Manufacturer> findByPhone(@NonNull String phone) {
-        return manufacturerRepository.findByPhone(phone);
+        Optional<Manufacturer> manufacturer = manufacturerRepository.findByPhone(phone);
+        if (!manufacturer.isPresent()) {
+            throw new IllegalArgumentException("Производителя с таким телефоном не существует");
+        }
+        return manufacturer;
     }
 
     public Optional<Manufacturer> updatePhone(Long manufacturerId, String newPhone) {

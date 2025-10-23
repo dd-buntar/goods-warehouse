@@ -1,5 +1,6 @@
 package com.github.dd_buntar.goods_warehouse.app.services;
 
+import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.ProductRepository;
 import lombok.NonNull;
@@ -24,11 +25,19 @@ public class ProductService {
     }
 
     public Optional<Product> findById(@NonNull final Long id) {
-        return productRepository.findById(id);
+        Optional<Product> product = productRepository.findById(id);
+        if (!product.isPresent()) {
+            throw new IllegalArgumentException("Продукта с таким id не существует");
+        }
+        return product;
     }
 
     public List<Product> findAll() {
-        return productRepository.findAll();
+        List<Product> products = productRepository.findAll();
+        if (products.isEmpty()) {
+            throw new IllegalArgumentException("Таблица пустая");
+        }
+        return products;
     }
 
     public Optional<Product> update(final Product entity) {
@@ -43,16 +52,27 @@ public class ProductService {
     }
 
     public boolean deleteById(@NonNull final Long id) {
-        return productRepository.deleteById(id);
+        boolean isDeleted = productRepository.deleteById(id);
+        if (!isDeleted) {
+            throw new IllegalArgumentException("Продукта с таким id не существует");
+        }
+        return isDeleted;
     }
 
     public Optional<Product> findByName(String name) {
-        validateProductName(name);
-        return productRepository.findByName(name);
+        Optional<Product> product = productRepository.findByName(name);
+        if (!product.isPresent()) {
+            throw new IllegalArgumentException("Продукта с таким именем не существует");
+        }
+        return product;
     }
 
     public List<Product> findByManufacturerId(@NonNull Long manufacturerId) {
-        return productRepository.findByManufacturerId(manufacturerId);
+        List<Product> products = productRepository.findByManufacturerId(manufacturerId);
+        if (products.isEmpty()) {
+            throw new IllegalArgumentException("Продуктов с таким производителем не существует");
+        }
+        return products;
     }
 
     private void validateProductId(Long productId) {

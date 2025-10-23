@@ -1,13 +1,11 @@
 package com.github.dd_buntar.goods_warehouse.app.services;
 
+import com.github.dd_buntar.goods_warehouse.domain.entities.Shipment;
 import com.github.dd_buntar.goods_warehouse.domain.entities.StorageLocation;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.StorageLocationRepository;
 import lombok.NonNull;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class StorageLocationService {
     private final StorageLocationRepository storageLocationRepository;
@@ -27,11 +25,19 @@ public class StorageLocationService {
     }
 
     public Optional<StorageLocation> findById(@NonNull final Long id) {
-        return storageLocationRepository.findById(id);
+        Optional<StorageLocation> storageLocation = storageLocationRepository.findById(id);
+        if (!storageLocation.isPresent()) {
+            throw new IllegalArgumentException("Местоположения с таким id не существует");
+        }
+        return storageLocation;
     }
 
     public List<StorageLocation> findAll() {
-        return storageLocationRepository.findAll();
+        List<StorageLocation> locations = storageLocationRepository.findAll();
+        if (locations.isEmpty()) {
+            throw new IllegalArgumentException("Таблица пустая");
+        }
+        return locations;
     }
 
     public Optional<StorageLocation> update(final StorageLocation storageLocation) {
@@ -47,21 +53,35 @@ public class StorageLocationService {
     }
 
     public boolean deleteById(@NonNull final Long id) {
-        return storageLocationRepository.deleteById(id);
+        boolean isDeleted = storageLocationRepository.deleteById(id);
+        if (!isDeleted) {
+            throw new IllegalArgumentException("Местоположения с таким id не существует");
+        }
+        return isDeleted;
     }
 
-    public List<StorageLocation> findByRackNumber(Integer rackNum) {
-        validateRackNum(rackNum);
-        return storageLocationRepository.findByRackNumber(rackNum);
+    public List<StorageLocation> findByRackNumber(@NonNull Integer rackNum) {
+        List<StorageLocation> storageLocations = storageLocationRepository.findByRackNumber(rackNum);
+        if (storageLocations.isEmpty()) {
+            throw new IllegalArgumentException("Местоположений с таким номером стеллажа не существует");
+        }
+        return storageLocations;
     }
 
     public Set<Integer> findAllRackNumbers() {
-        return storageLocationRepository.findAllRackNumbers();
+        Set<Integer> racks = new HashSet<>(storageLocationRepository.findAllRackNumbers());
+        if (racks.isEmpty()) {
+            throw new IllegalArgumentException("Таблица пустая");
+        }
+        return racks;
     }
 
-    public List<Integer> findShelvesByRack(Integer rackNum) {
-        validateRackNum(rackNum);
-        return storageLocationRepository.findShelvesByRack(rackNum);
+    public List<Integer> findShelvesByRack(@NonNull Integer rackNum) {
+        List<Integer> shelves = storageLocationRepository.findShelvesByRack(rackNum);
+        if (shelves.isEmpty()) {
+            throw new IllegalArgumentException("Стеллажа с таким номером не сущетсвует");
+        }
+        return shelves;
     }
 
 

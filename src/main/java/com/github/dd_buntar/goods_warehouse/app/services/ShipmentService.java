@@ -33,36 +33,60 @@ public class ShipmentService {
     }
 
     public Optional<Shipment> findById(@NonNull final Long id) {
-        return shipmentRepository.findById(id);
+        Optional<Shipment> shipment = shipmentRepository.findById(id);
+        if (!shipment.isPresent()) {
+            throw new IllegalArgumentException("Поставки с таким id не существует");
+        }
+        return shipment;
     }
 
     public List<Shipment> findAll() {
-        return shipmentRepository.findAll();
+        List<Shipment> shipments = shipmentRepository.findAll();
+        if (shipments.isEmpty()) {
+            throw new IllegalArgumentException("Таблица пустая");
+        }
+        return shipments;
     }
 
     public Optional<Shipment> update(final Shipment entity) {
         validateShipment(entity);
         Optional<Shipment> curShipment = shipmentRepository.update(entity);
         if (!curShipment.isPresent()) {
-            throw new IllegalArgumentException("id поставки нет в хранилище");
+            throw new IllegalArgumentException("Поставки с таким id не существует");
         }
         return curShipment;
     }
 
     public boolean deleteById(@NonNull final Long id) {
-        return shipmentRepository.deleteById(id);
+        boolean isDeleted = shipmentRepository.deleteById(id);
+        if (!isDeleted) {
+            throw new IllegalArgumentException("Поставки с таким id не существует");
+        }
+        return isDeleted;
     }
 
     public List<Shipment> findByProductId(@NonNull Long productId) {
-        return shipmentRepository.findByProductId(productId);
+        List<Shipment> shipments = shipmentRepository.findByProductId(productId);
+        if (shipments.isEmpty()) {
+            throw new IllegalArgumentException("Поставок с таким продуктом не существует");
+        }
+        return shipments;
     }
 
     public List<Shipment> findByProductionDate(@NonNull LocalDateTime productionDate) {
-        return shipmentRepository.findByProductionDate(productionDate);
+        List<Shipment> shipments = shipmentRepository.findByProductionDate(productionDate);
+        if (shipments.isEmpty()) {
+            throw new IllegalArgumentException("Поставок с такой датой изготовления не существует");
+        }
+        return shipments;
     }
 
     public List<Shipment> findByArrivalDate(@NonNull LocalDateTime arrivalDate) {
-        return shipmentRepository.findByArrivalDate(arrivalDate);
+        List<Shipment> shipments = shipmentRepository.findByArrivalDate(arrivalDate);
+        if (shipments.isEmpty()) {
+            throw new IllegalArgumentException("Поставок с такой датой привоза не существует");
+        }
+        return shipments;
     }
 
     private void validateShipmentId(Long shipmentId) {
