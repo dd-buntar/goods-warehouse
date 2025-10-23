@@ -84,5 +84,6 @@ public class CommandFactory {
             default:
                 return new MessageCommand();
         }
+        return null;
     }
 }
