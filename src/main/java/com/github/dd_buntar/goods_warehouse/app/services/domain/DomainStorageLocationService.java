@@ -7,22 +7,18 @@ import com.github.dd_buntar.goods_warehouse.app.services.StorageLocationService;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 public class DomainStorageLocationService {
     private final StorageLocationService storageLocationService;
     private final DomainStorehouseService domainStorehouseService;
 
-    public DomainStorageLocationService(StorageLocationService storageLocationService,
-                                        DomainStorehouseService domainStorehouseService) {
-        this.storageLocationService = storageLocationService;
-        this.domainStorehouseService = domainStorehouseService;
-    }
-
-    public Optional<StorageLocation> create(StorageLocation storageLocation) {
+    public StorageLocation create(StorageLocation storageLocation) {
         return storageLocationService.createStorageLocation(storageLocation);
     }
 
-    public Optional<StorageLocation> findById(final Long id) {
+    public StorageLocation findById(final Long id) {
         return storageLocationService.findById(id);
     }
 
@@ -30,18 +26,18 @@ public class DomainStorageLocationService {
         return storageLocationService.findAll();
     }
 
-    public Optional<StorageLocation> update(final StorageLocation storageLocation) {
+    public StorageLocation update(final StorageLocation storageLocation) {
         return storageLocationService.update(storageLocation);
     }
 
-    public boolean deleteById(Long locationId) {
+    public void deleteById(Long locationId) {
         List<Storehouse> storehouseRecords = domainStorehouseService.findByLocationId(locationId);
         if (!storehouseRecords.isEmpty()) {
             for (Storehouse s : storehouseRecords) {
                 domainStorehouseService.deleteById(s.getStockId());
             }
         }
-        return storageLocationService.deleteById(locationId);
+        storageLocationService.deleteById(locationId);
     }
 
     public List<StorageLocation> findByRackNumber(Integer rackNum) {
