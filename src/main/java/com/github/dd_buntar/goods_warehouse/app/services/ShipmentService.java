@@ -15,29 +15,31 @@ public class ShipmentService {
         this.shipmentRepository = shipmentRepository;
     }
 
-    public Optional<Shipment> create(final Shipment entity) {
+    public Shipment create(@NonNull final Shipment entity) {
         validateProductId(entity.getProductId());
 
         validatePrices(entity.getPurchasePrice(),
                 entity.getSalePrice());
 
-        validateDates(entity.getProductionDate(),
+        validateDates(
+                entity.getProductionDate(),
                 entity.getExpiryDate(),
-                entity.getArrivalDate());
+                entity.getArrivalDate()
+        );
 
         Optional<Shipment> curShipment = shipmentRepository.create(entity);
         if (!curShipment.isPresent()) {
             throw new IllegalArgumentException("Запись с таким id уже существует");
         }
-        return curShipment;
+        return curShipment.get();
     }
 
-    public Optional<Shipment> findById(@NonNull final Long id) {
+    public Shipment findById(@NonNull final Long id) {
         Optional<Shipment> shipment = shipmentRepository.findById(id);
         if (!shipment.isPresent()) {
             throw new IllegalArgumentException("Поставки с таким id не существует");
         }
-        return shipment;
+        return shipment.get();
     }
 
     public List<Shipment> findAll() {
@@ -48,24 +50,23 @@ public class ShipmentService {
         return shipments;
     }
 
-    public Optional<Shipment> update(final Shipment entity) {
+    public Shipment update(@NonNull final Shipment entity) {
         validateShipment(entity);
         Optional<Shipment> curShipment = shipmentRepository.update(entity);
         if (!curShipment.isPresent()) {
             throw new IllegalArgumentException("Поставки с таким id не существует");
         }
-        return curShipment;
+        return curShipment.get();
     }
 
-    public boolean deleteById(@NonNull final Long id) {
+    public void deleteById(@NonNull final Long id) {
         boolean isDeleted = shipmentRepository.deleteById(id);
         if (!isDeleted) {
             throw new IllegalArgumentException("Поставки с таким id не существует");
         }
-        return isDeleted;
     }
 
-    public List<Shipment> findByProductId(@NonNull Long productId) {
+    public List<Shipment> findByProductId(@NonNull final Long productId) {
         List<Shipment> shipments = shipmentRepository.findByProductId(productId);
         if (shipments.isEmpty()) {
             throw new IllegalArgumentException("Поставок с таким продуктом не существует");
@@ -73,7 +74,7 @@ public class ShipmentService {
         return shipments;
     }
 
-    public List<Shipment> findByProductionDate(@NonNull LocalDateTime productionDate) {
+    public List<Shipment> findByProductionDate(@NonNull final LocalDateTime productionDate) {
         List<Shipment> shipments = shipmentRepository.findByProductionDate(productionDate);
         if (shipments.isEmpty()) {
             throw new IllegalArgumentException("Поставок с такой датой изготовления не существует");
@@ -81,7 +82,7 @@ public class ShipmentService {
         return shipments;
     }
 
-    public List<Shipment> findByArrivalDate(@NonNull LocalDateTime arrivalDate) {
+    public List<Shipment> findByArrivalDate(@NonNull final LocalDateTime arrivalDate) {
         List<Shipment> shipments = shipmentRepository.findByArrivalDate(arrivalDate);
         if (shipments.isEmpty()) {
             throw new IllegalArgumentException("Поставок с такой датой привоза не существует");
@@ -93,7 +94,6 @@ public class ShipmentService {
         if (shipmentId == null || shipmentId <= 0) {
             throw new IllegalArgumentException("ID поставки должен быть положительным числом");
         }
-
     }
 
     private void validateProductId(Long productId) {

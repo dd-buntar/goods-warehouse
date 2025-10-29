@@ -51,12 +51,11 @@ public class ProductService {
         return curProduct.get();
     }
 
-    public boolean deleteById(@NonNull final Long id) {
+    public void deleteById(@NonNull final Long id) {
         boolean isDeleted = productRepository.deleteById(id);
         if (!isDeleted) {
             throw new IllegalArgumentException("Продукта с таким id не существует");
         }
-        return true;
     }
 
     public Product findByName(@NonNull final String name) {

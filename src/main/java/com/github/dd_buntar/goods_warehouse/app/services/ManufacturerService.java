@@ -53,12 +53,11 @@ public class ManufacturerService {
         return curManufacturer.get();
     }
 
-    public boolean deleteById(@NonNull final Long id) {
+    public void deleteById(@NonNull final Long id) {
         boolean isDeleted = manufacturerRepository.deleteById(id);
         if (!isDeleted) {
             throw new IllegalArgumentException("Производителя с таким id не существует");
         }
-        return true;
     }
 
     public Manufacturer findByName(@NonNull final String name) {

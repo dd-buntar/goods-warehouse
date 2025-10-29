@@ -14,7 +14,7 @@ public class StorehouseService {
         this.storehouseRepository = storehouseRepository;
     }
 
-    public Optional<Storehouse> create(final Storehouse entity) {
+    public Storehouse create(@NonNull final Storehouse entity) {
         validateShipmentId(entity.getShipmentId());
         validateLocationId(entity.getLocationId());
         validateQuantity(entity.getQuantity());
@@ -22,15 +22,15 @@ public class StorehouseService {
         if (!curStorehouse.isPresent()) {
             throw new IllegalArgumentException("Запись с таким id уже существует");
         }
-        return curStorehouse;
+        return curStorehouse.get();
     }
 
-    public Optional<Storehouse> findById(@NonNull final Long id) {
+    public Storehouse findById(@NonNull final Long id) {
         Optional<Storehouse> storehouse = storehouseRepository.findById(id);
         if (!storehouse.isPresent()) {
             throw new IllegalArgumentException("Поставки на складе с таким id не существует");
         }
-        return storehouse;
+        return storehouse.get();
     }
 
     public List<Storehouse> findAll() {
@@ -41,24 +41,23 @@ public class StorehouseService {
         return storehouses;
     }
 
-    public Optional<Storehouse> update(final Storehouse entity) {
+    public Storehouse update(@NonNull final Storehouse entity) {
         validateStorehouse(entity);
         Optional<Storehouse> curStorehouse = storehouseRepository.update(entity);
         if (!curStorehouse.isPresent()) {
             throw new IllegalArgumentException("Поставки на складе с таким id не существует");
         }
-        return curStorehouse;
+        return curStorehouse.get();
     }
 
-    public boolean deleteById(@NonNull final Long id) {
+    public void deleteById(@NonNull final Long id) {
         boolean isDeleted = storehouseRepository.deleteById(id);
         if (!isDeleted) {
             throw new IllegalArgumentException("Поставки на складе с таким id не существует");
         }
-        return isDeleted;
     }
 
-    public List<Storehouse> findByLocationId(@NonNull Long locationId) {
+    public List<Storehouse> findByLocationId(@NonNull final Long locationId) {
         List<Storehouse> storehouses = storehouseRepository.findByLocationId(locationId);
         if (storehouses.isEmpty()) {
             throw new IllegalArgumentException("Поставки на складе с таким местоположением не существует");
@@ -66,7 +65,7 @@ public class StorehouseService {
         return storehouses;
     }
 
-    public List<Storehouse> findByShipmentId(@NonNull Long shipmentId) {
+    public List<Storehouse> findByShipmentId(@NonNull final Long shipmentId) {
         List<Storehouse> storehouses = storehouseRepository.findByShipmentId(shipmentId);
         if (storehouses.isEmpty()) {
             throw new IllegalArgumentException("Такой поставки на складе нет");
