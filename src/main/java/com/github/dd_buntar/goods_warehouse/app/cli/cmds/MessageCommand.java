@@ -6,6 +6,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MessageCommand implements Command {
     private final String name;
+
     @Setter
     private String msg;
 

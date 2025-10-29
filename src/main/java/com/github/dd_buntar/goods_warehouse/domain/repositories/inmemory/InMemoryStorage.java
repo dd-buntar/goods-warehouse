@@ -14,11 +14,11 @@ public class InMemoryStorage implements Storage {
     private final StorageLocationRepositoryImpl storageLocationRepository;
 
     private InMemoryStorage() {
-        manufacturerRepository = new ManufacturerRepositoryImpl();
-        productRepository = new ProductRepositoryImpl();
-        shipmentRepository = new ShipmentRepositoryImpl();
-        storageLocationRepository = new StorageLocationRepositoryImpl();
-        storehouseRepository = new StorehouseRepositoryImpl();
+        this.manufacturerRepository = new ManufacturerRepositoryImpl();
+        this.productRepository = new ProductRepositoryImpl();
+        this.shipmentRepository = new ShipmentRepositoryImpl();
+        this.storageLocationRepository = new StorageLocationRepositoryImpl();
+        this.storehouseRepository = new StorehouseRepositoryImpl();
     }
 
     public static InMemoryStorage getInstance() {

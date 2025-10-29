@@ -13,14 +13,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class CliApp {
-    private DomainManufacturerService manufacturerService;
-    private DomainProductService productService;
-    private DomainStorehouseService storehouseService;
-    private DomainShipmentService shipmentService;
-    private DomainStorageLocationService storageLocationService;
-
-    private List<Command> commands;
-
     private final CommandFactory commandFactory;
 
     public CliApp(ServiceFactory serviceFactory) {

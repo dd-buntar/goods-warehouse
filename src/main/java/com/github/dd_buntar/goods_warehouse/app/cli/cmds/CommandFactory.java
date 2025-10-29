@@ -18,7 +18,7 @@ public class CommandFactory {
     private List<Command> commands;
     private MessageCommand helpCommand = new MessageCommand("help", "");
 
-    public  CommandFactory(ServiceFactory serviceFactory) {
+    public CommandFactory(ServiceFactory serviceFactory) {
         DomainManufacturerService manufacturerService = serviceFactory.getDomainManufacturerService();
         DomainProductService productService = serviceFactory.getDomainProductService();
         DomainShipmentService shipmentService = serviceFactory.getDomainShipmentService();
