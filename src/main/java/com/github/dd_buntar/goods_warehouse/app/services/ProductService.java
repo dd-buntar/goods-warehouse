@@ -15,21 +15,21 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Optional<Product> create(final Product entity) {
+    public Product create(@NonNull final Product entity) {
         validateProduct(entity);
         Optional<Product> curProduct = productRepository.create(entity);
         if (!curProduct.isPresent()) {
             throw new IllegalArgumentException("Запись с таким id уже существует");
         }
-        return curProduct;
+        return curProduct.get();
     }
 
-    public Optional<Product> findById(@NonNull final Long id) {
+    public Product findById(@NonNull final Long id) {
         Optional<Product> product = productRepository.findById(id);
         if (!product.isPresent()) {
             throw new IllegalArgumentException("Продукта с таким id не существует");
         }
-        return product;
+        return product.get();
     }
 
     public List<Product> findAll() {
@@ -40,7 +40,7 @@ public class ProductService {
         return products;
     }
 
-    public Optional<Product> update(final Product entity) {
+    public Product update(@NonNull final Product entity) {
         validateProductName(entity.getProductName());
         validateManufacturerId(entity.getManufacturerId());
         validateWeight(entity.getWeight());
@@ -48,7 +48,7 @@ public class ProductService {
         if (!curProduct.isPresent()) {
             throw new IllegalArgumentException("id продукта нет в хранилище");
         }
-        return curProduct;
+        return curProduct.get();
     }
 
     public boolean deleteById(@NonNull final Long id) {
@@ -56,18 +56,18 @@ public class ProductService {
         if (!isDeleted) {
             throw new IllegalArgumentException("Продукта с таким id не существует");
         }
-        return isDeleted;
+        return true;
     }
 
-    public Optional<Product> findByName(String name) {
+    public Product findByName(@NonNull final String name) {
         Optional<Product> product = productRepository.findByName(name);
         if (!product.isPresent()) {
             throw new IllegalArgumentException("Продукта с таким именем не существует");
         }
-        return product;
+        return product.get();
     }
 
-    public List<Product> findByManufacturerId(@NonNull Long manufacturerId) {
+    public List<Product> findByManufacturerId(@NonNull final Long manufacturerId) {
         List<Product> products = productRepository.findByManufacturerId(manufacturerId);
         if (products.isEmpty()) {
             throw new IllegalArgumentException("Продуктов с таким производителем не существует");
