@@ -2,17 +2,15 @@ package com.github.dd_buntar.goods_warehouse.app.services;
 
 import com.github.dd_buntar.goods_warehouse.domain.entities.Storehouse;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.StorehouseRepository;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 public class StorehouseService {
     private final StorehouseRepository storehouseRepository;
-
-    public StorehouseService(StorehouseRepository storehouseRepository) {
-        this.storehouseRepository = storehouseRepository;
-    }
 
     public Storehouse create(@NonNull final Storehouse entity) {
         validateShipmentId(entity.getShipmentId());
@@ -20,7 +18,7 @@ public class StorehouseService {
         validateQuantity(entity.getQuantity());
         Optional<Storehouse> curStorehouse = storehouseRepository.create(entity);
         if (!curStorehouse.isPresent()) {
-            throw new IllegalArgumentException("Запись с таким id уже существует");
+            throw new IllegalArgumentException("Запись с id= " + entity.getStockId() + " уже существует");
         }
         return curStorehouse.get();
     }
@@ -28,7 +26,7 @@ public class StorehouseService {
     public Storehouse findById(@NonNull final Long id) {
         Optional<Storehouse> storehouse = storehouseRepository.findById(id);
         if (!storehouse.isPresent()) {
-            throw new IllegalArgumentException("Поставки на складе с таким id не существует");
+            throw new IllegalArgumentException("Поставки на складе с id= " + id + " не существует");
         }
         return storehouse.get();
     }
@@ -45,7 +43,7 @@ public class StorehouseService {
         validateStorehouse(entity);
         Optional<Storehouse> curStorehouse = storehouseRepository.update(entity);
         if (!curStorehouse.isPresent()) {
-            throw new IllegalArgumentException("Поставки на складе с таким id не существует");
+            throw new IllegalArgumentException("Поставки на складе с id= " + entity.getStockId() + " не существует");
         }
         return curStorehouse.get();
     }
@@ -53,14 +51,14 @@ public class StorehouseService {
     public void deleteById(@NonNull final Long id) {
         boolean isDeleted = storehouseRepository.deleteById(id);
         if (!isDeleted) {
-            throw new IllegalArgumentException("Поставки на складе с таким id не существует");
+            throw new IllegalArgumentException("Поставки на складе с id= " + id + " не существует");
         }
     }
 
     public List<Storehouse> findByLocationId(@NonNull final Long locationId) {
         List<Storehouse> storehouses = storehouseRepository.findByLocationId(locationId);
         if (storehouses.isEmpty()) {
-            throw new IllegalArgumentException("Поставки на складе с таким местоположением не существует");
+            throw new IllegalArgumentException("Поставки на складе с местоположением id= " + locationId + " не существует");
         }
         return storehouses;
     }
@@ -68,7 +66,7 @@ public class StorehouseService {
     public List<Storehouse> findByShipmentId(@NonNull final Long shipmentId) {
         List<Storehouse> storehouses = storehouseRepository.findByShipmentId(shipmentId);
         if (storehouses.isEmpty()) {
-            throw new IllegalArgumentException("Такой поставки на складе нет");
+            throw new IllegalArgumentException("Поставки с id= " + shipmentId + " на складе нет");
         }
         return storehouses;
     }

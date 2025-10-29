@@ -3,23 +3,21 @@ package com.github.dd_buntar.goods_warehouse.app.services;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.ProductRepository;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
-
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     public Product create(@NonNull final Product entity) {
         validateProduct(entity);
         Optional<Product> curProduct = productRepository.create(entity);
         if (!curProduct.isPresent()) {
-            throw new IllegalArgumentException("Запись с таким id уже существует");
+            throw new IllegalArgumentException("Запись с id= " + entity.getProductId() + " уже существует");
         }
         return curProduct.get();
     }
@@ -27,7 +25,7 @@ public class ProductService {
     public Product findById(@NonNull final Long id) {
         Optional<Product> product = productRepository.findById(id);
         if (!product.isPresent()) {
-            throw new IllegalArgumentException("Продукта с таким id не существует");
+            throw new IllegalArgumentException("Продукта с id= " + id + " не существует");
         }
         return product.get();
     }
@@ -46,7 +44,7 @@ public class ProductService {
         validateWeight(entity.getWeight());
         Optional<Product> curProduct = productRepository.update(entity);
         if (!curProduct.isPresent()) {
-            throw new IllegalArgumentException("id продукта нет в хранилище");
+            throw new IllegalArgumentException("Продукта с id= " + entity.getProductId() + " не существует");
         }
         return curProduct.get();
     }
@@ -54,14 +52,14 @@ public class ProductService {
     public void deleteById(@NonNull final Long id) {
         boolean isDeleted = productRepository.deleteById(id);
         if (!isDeleted) {
-            throw new IllegalArgumentException("Продукта с таким id не существует");
+            throw new IllegalArgumentException("Продукта с id= " + id + " не существует");
         }
     }
 
     public Product findByName(@NonNull final String name) {
         Optional<Product> product = productRepository.findByName(name);
         if (!product.isPresent()) {
-            throw new IllegalArgumentException("Продукта с таким именем не существует");
+            throw new IllegalArgumentException("Продукта с именем " + name + " не существует");
         }
         return product.get();
     }
@@ -69,7 +67,7 @@ public class ProductService {
     public List<Product> findByManufacturerId(@NonNull final Long manufacturerId) {
         List<Product> products = productRepository.findByManufacturerId(manufacturerId);
         if (products.isEmpty()) {
-            throw new IllegalArgumentException("Продуктов с таким производителем не существует");
+            throw new IllegalArgumentException("Продуктов с производителем " + manufacturerId + " не существует");
         }
         return products;
     }

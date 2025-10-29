@@ -2,18 +2,16 @@ package com.github.dd_buntar.goods_warehouse.app.services;
 
 import com.github.dd_buntar.goods_warehouse.domain.entities.Shipment;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.ShipmentRepository;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 public class ShipmentService {
     private final ShipmentRepository shipmentRepository;
-
-    public ShipmentService(ShipmentRepository shipmentRepository) {
-        this.shipmentRepository = shipmentRepository;
-    }
 
     public Shipment create(@NonNull final Shipment entity) {
         validateProductId(entity.getProductId());
@@ -29,7 +27,7 @@ public class ShipmentService {
 
         Optional<Shipment> curShipment = shipmentRepository.create(entity);
         if (!curShipment.isPresent()) {
-            throw new IllegalArgumentException("Запись с таким id уже существует");
+            throw new IllegalArgumentException("Запись с id= " + entity.getShipmentId() + " уже существует");
         }
         return curShipment.get();
     }
@@ -37,7 +35,7 @@ public class ShipmentService {
     public Shipment findById(@NonNull final Long id) {
         Optional<Shipment> shipment = shipmentRepository.findById(id);
         if (!shipment.isPresent()) {
-            throw new IllegalArgumentException("Поставки с таким id не существует");
+            throw new IllegalArgumentException("Запись с id= " + id + " не существует");
         }
         return shipment.get();
     }
@@ -54,7 +52,7 @@ public class ShipmentService {
         validateShipment(entity);
         Optional<Shipment> curShipment = shipmentRepository.update(entity);
         if (!curShipment.isPresent()) {
-            throw new IllegalArgumentException("Поставки с таким id не существует");
+            throw new IllegalArgumentException("Запись с id= " + entity.getShipmentId() + " не существует");
         }
         return curShipment.get();
     }
@@ -62,14 +60,14 @@ public class ShipmentService {
     public void deleteById(@NonNull final Long id) {
         boolean isDeleted = shipmentRepository.deleteById(id);
         if (!isDeleted) {
-            throw new IllegalArgumentException("Поставки с таким id не существует");
+            throw new IllegalArgumentException("Запись с id= " + id + " не существует");
         }
     }
 
     public List<Shipment> findByProductId(@NonNull final Long productId) {
         List<Shipment> shipments = shipmentRepository.findByProductId(productId);
         if (shipments.isEmpty()) {
-            throw new IllegalArgumentException("Поставок с таким продуктом не существует");
+            throw new IllegalArgumentException("Поставок с продуктом id=" + productId + " не существует");
         }
         return shipments;
     }
@@ -77,7 +75,7 @@ public class ShipmentService {
     public List<Shipment> findByProductionDate(@NonNull final LocalDateTime productionDate) {
         List<Shipment> shipments = shipmentRepository.findByProductionDate(productionDate);
         if (shipments.isEmpty()) {
-            throw new IllegalArgumentException("Поставок с такой датой изготовления не существует");
+            throw new IllegalArgumentException("Поставок с датой изготовления " + productionDate + " не существует");
         }
         return shipments;
     }
@@ -85,7 +83,7 @@ public class ShipmentService {
     public List<Shipment> findByArrivalDate(@NonNull final LocalDateTime arrivalDate) {
         List<Shipment> shipments = shipmentRepository.findByArrivalDate(arrivalDate);
         if (shipments.isEmpty()) {
-            throw new IllegalArgumentException("Поставок с такой датой привоза не существует");
+            throw new IllegalArgumentException("Поставок с датой привоза " + arrivalDate + " не существует");
         }
         return shipments;
     }
