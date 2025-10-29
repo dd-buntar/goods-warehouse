@@ -1,9 +1,7 @@
 package com.github.dd_buntar.goods_warehouse.app.cli.cmds.shipment;
 
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.Command;
-import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainProductService;
 import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainShipmentService;
-import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Shipment;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
@@ -12,14 +10,12 @@ import java.util.List;
 
 @AllArgsConstructor
 public class FindAllShipmentCommand implements Command {
-    public static final String HELP_MESSAGE = "shipment-findAll";
+    public static final String NAME = "shipment-findAll";
 
-    @Setter
-    private String[] args;
     private DomainShipmentService service;
 
     @Override
-    public void execute() {
+    public void execute(String[] args) {
         if (args.length > 0) {
             throw new IllegalArgumentException("У команды не должно быть аргументов");
         }
@@ -29,6 +25,11 @@ public class FindAllShipmentCommand implements Command {
 
     @Override
     public String getHelp() {
-        return HELP_MESSAGE;
+        return NAME;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

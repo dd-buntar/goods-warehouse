@@ -3,21 +3,17 @@ package com.github.dd_buntar.goods_warehouse.app.cli.cmds.manufacturer;
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.Command;
 import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainManufacturerService;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
-import lombok.AllArgsConstructor;
-import lombok.Setter;
-
 import java.util.List;
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class FindAllManufacturerCommand implements Command {
-    public static final String HELP_MESSAGE = "manufacturer-findAll";
+    public static final String NAME = "manufacturer-findAll";
 
-    @Setter
-    private String[] args;
     private DomainManufacturerService service;
 
     @Override
-    public void execute() {
+    public void execute(String[] args) {
         if (args.length > 0) {
             throw new IllegalArgumentException("У команды не должно быть аргументов");
         }
@@ -27,6 +23,11 @@ public class FindAllManufacturerCommand implements Command {
 
     @Override
     public String getHelp() {
-        return HELP_MESSAGE;
+        return NAME;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

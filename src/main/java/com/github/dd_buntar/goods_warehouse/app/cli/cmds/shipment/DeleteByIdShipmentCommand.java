@@ -3,18 +3,16 @@ package com.github.dd_buntar.goods_warehouse.app.cli.cmds.shipment;
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.Command;
 import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainShipmentService;
 import lombok.AllArgsConstructor;
-import lombok.Setter;
 
 @AllArgsConstructor
 public class DeleteByIdShipmentCommand implements Command {
-    public static final String HELP_MESSAGE = "shipment-deleteById (id)";
+    public static final String NAME = "shipment-deleteById";
+    public static final String HELP_MESSAGE = NAME + " (id)";
 
-    @Setter
-    private String[] args;
     private DomainShipmentService service;
 
     @Override
-    public void execute() {
+    public void execute(String[] args) {
         if (args.length != 1) {
             throw new IllegalArgumentException("Неправильное количество аргументов");
         }
@@ -25,5 +23,10 @@ public class DeleteByIdShipmentCommand implements Command {
     @Override
     public String getHelp() {
         return HELP_MESSAGE;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

@@ -5,34 +5,14 @@ package com.github.dd_buntar.goods_warehouse;
 import com.github.dd_buntar.goods_warehouse.app.cli.CliApp;
 import com.github.dd_buntar.goods_warehouse.app.services.*;
 import com.github.dd_buntar.goods_warehouse.app.services.domain.*;
-import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
-import com.github.dd_buntar.goods_warehouse.domain.entities.Shipment;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.*;
-import com.github.dd_buntar.goods_warehouse.infrastructure.inmemory.*;
+import com.github.dd_buntar.goods_warehouse.domain.repositories.inmemory.*;
 
 public class Main {
     public static void main(String[] args) {
-        ManufacturerRepository manufacturerRepository = new ManufacturerRepositoryImpl();
-        ProductRepository productRepository = new ProductRepositoryImpl();
-        ShipmentRepository shipmentRepository = new ShipmentRepositoryImpl();
-        StorageLocationRepository storageLocationRepository = new StorageLocationRepositoryImpl();
-        StorehouseRepository storehouseRepository = new StorehouseRepositoryImpl();
-
-        ManufacturerService manufacturerService = new ManufacturerService(manufacturerRepository);
-        ProductService productService = new ProductService(productRepository);
-        ShipmentService shipmentService = new ShipmentService(shipmentRepository);
-        StorageLocationService storageLocationService = new StorageLocationService(storageLocationRepository);
-        StorehouseService storehouseService = new StorehouseService(storehouseRepository);
-
-        DomainStorehouseService domainStorehouseService = new DomainStorehouseService(storehouseService, shipmentService, storageLocationService);
-        DomainShipmentService domainShipmentService = new DomainShipmentService(shipmentService, domainStorehouseService, productService);
-        DomainProductService domainProductService = new DomainProductService(productService, domainShipmentService, manufacturerService);
-        DomainManufacturerService domainManufacturerService = new DomainManufacturerService(manufacturerService, domainProductService);
-        DomainStorageLocationService domainStorageLocationService = new DomainStorageLocationService(storageLocationService, domainStorehouseService);
-
-        CliApp cliApp = new CliApp(domainManufacturerService,
-                domainProductService, domainStorehouseService,
-                domainShipmentService, domainStorageLocationService);
+        InMemoryStorage storage = InMemoryStorage.getInstance();
+        ServiceFactory serviceFactory = new ServiceFactory(storage);
+        CliApp cliApp = new CliApp(serviceFactory);
 
         cliApp.run();
     }

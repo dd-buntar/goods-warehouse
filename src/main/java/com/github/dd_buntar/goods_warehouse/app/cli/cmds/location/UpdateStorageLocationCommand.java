@@ -10,14 +10,13 @@ import lombok.Setter;
 
 @AllArgsConstructor
 public class UpdateStorageLocationCommand implements Command {
-    public static final String HELP_MESSAGE = "location-update (id, rackNum, shelfNum)";
+    public static final String NAME = "location-update";
+    public static final String HELP_MESSAGE = NAME + " (id, rackNum, shelfNum)";
 
-    @Setter
-    private String[] args;
     private DomainStorageLocationService service;
 
     @Override
-    public void execute() {
+    public void execute(String[] args) {
         if (args.length != 3) {
             throw new IllegalArgumentException("Неправильное количество аргументов");
         }
@@ -37,5 +36,10 @@ public class UpdateStorageLocationCommand implements Command {
     @Override
     public String getHelp() {
         return HELP_MESSAGE;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

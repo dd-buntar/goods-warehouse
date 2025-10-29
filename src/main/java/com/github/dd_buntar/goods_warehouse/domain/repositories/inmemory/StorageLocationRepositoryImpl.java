@@ -1,4 +1,4 @@
-package com.github.dd_buntar.goods_warehouse.infrastructure.inmemory;
+package com.github.dd_buntar.goods_warehouse.domain.repositories.inmemory;
 
 import com.github.dd_buntar.goods_warehouse.domain.entities.StorageLocation;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.StorageLocationRepository;

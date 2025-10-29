@@ -1,23 +1,19 @@
 package com.github.dd_buntar.goods_warehouse.app.cli.cmds.location;
 
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.Command;
-import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainManufacturerService;
 import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainStorageLocationService;
-import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
 import com.github.dd_buntar.goods_warehouse.domain.entities.StorageLocation;
 import lombok.AllArgsConstructor;
-import lombok.Setter;
 
 @AllArgsConstructor
 public class CreateStorageLocationCommand implements Command {
-    public static final String HELP_MESSAGE = "location-create (rackNum, shelfNum)";
+    public static final String NAME = "location-create";
+    public static final String HELP_MESSAGE = NAME + " (rackNum, shelfNum)";
 
-    @Setter
-    private String[] args;
     private DomainStorageLocationService service;
 
     @Override
-    public void execute() {
+    public void execute(String[] args) {
         if (args.length != 2) {
             throw new IllegalArgumentException("Неправильное количество аргументов");
         }
@@ -35,5 +31,10 @@ public class CreateStorageLocationCommand implements Command {
     @Override
     public String getHelp() {
         return HELP_MESSAGE;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }
