@@ -14,7 +14,7 @@ public class ManufacturerService {
         this.manufacturerRepository = manufacturerRepository;
     }
 
-    public Optional<Manufacturer> create(final Manufacturer manufacturer) {
+    public Manufacturer create(@NonNull final Manufacturer manufacturer) {
         validateManufacturerName(manufacturer.getManufacturerName());
         validatePhoneFormat(manufacturer.getContactPhone(), manufacturer.getCountry());
         validateCountry(manufacturer.getCountry());
@@ -22,15 +22,15 @@ public class ManufacturerService {
         if (!curManufacturer.isPresent()) {
             throw new IllegalArgumentException("Производитель с таким номером уже существует");
         }
-        return curManufacturer;
+        return curManufacturer.get();
     }
 
-    public Optional<Manufacturer> findById(@NonNull final Long id) {
+    public Manufacturer findById(@NonNull final Long id) {
         Optional<Manufacturer> manufacturer = manufacturerRepository.findById(id);
         if (!manufacturer.isPresent()) {
             throw new IllegalArgumentException("Производителя с таким id не существует");
         }
-        return manufacturer;
+        return manufacturer.get();
     }
 
     public List<Manufacturer> findAll() {
@@ -41,16 +41,16 @@ public class ManufacturerService {
         return manufacturers;
     }
 
-    public Optional<Manufacturer> update(final Manufacturer manufacturer) {
+    public Manufacturer update(@NonNull final Manufacturer manufacturer) {
         validateManufacturer(manufacturer);
         Optional<Manufacturer> curManufacturer = manufacturerRepository.update(manufacturer);
         if (!curManufacturer.isPresent()) {
             throw new IllegalArgumentException("Такого id нет в хранилище");
         }
-        if (!curManufacturer.equals(manufacturer)) {
+        if (!curManufacturer.get().equals(manufacturer)) {
             throw new IllegalArgumentException("Производитель с таким номером телефона уже существует");
         }
-        return curManufacturer;
+        return curManufacturer.get();
     }
 
     public boolean deleteById(@NonNull final Long id) {
@@ -58,18 +58,18 @@ public class ManufacturerService {
         if (!isDeleted) {
             throw new IllegalArgumentException("Производителя с таким id не существует");
         }
-        return isDeleted;
+        return true;
     }
 
-    public Optional<Manufacturer> findByName(@NonNull String name) {
+    public Manufacturer findByName(@NonNull final String name) {
         Optional<Manufacturer> manufacturer = manufacturerRepository.findByName(name);
         if (!manufacturer.isPresent()) {
             throw new IllegalArgumentException("Производителя с таким именем не существует");
         }
-        return manufacturer;
+        return manufacturer.get();
     }
 
-    public List<Manufacturer> findByCountry(@NonNull String country) {
+    public List<Manufacturer> findByCountry(@NonNull final String country) {
         List<Manufacturer> manufacturers = manufacturerRepository.findByCountry(country);
         if (manufacturers.isEmpty()) {
             throw new IllegalArgumentException("Производителей с такой страной не существует");
@@ -77,15 +77,15 @@ public class ManufacturerService {
         return manufacturers;
     }
 
-    public Optional<Manufacturer> findByPhone(@NonNull String phone) {
+    public Manufacturer findByPhone(@NonNull final String phone) {
         Optional<Manufacturer> manufacturer = manufacturerRepository.findByPhone(phone);
         if (!manufacturer.isPresent()) {
             throw new IllegalArgumentException("Производителя с таким телефоном не существует");
         }
-        return manufacturer;
+        return manufacturer.get();
     }
 
-    public Optional<Manufacturer> updatePhone(Long manufacturerId, String newPhone) {
+    public Manufacturer updatePhone(@NonNull final Long manufacturerId, @NonNull final String newPhone) {
         Optional<Manufacturer> manufacturer = manufacturerRepository.findById(manufacturerId);
         if (!manufacturer.isPresent()) {
             throw new IllegalArgumentException("Производителя с таким id не существует");
@@ -97,7 +97,7 @@ public class ManufacturerService {
         if (!curManufacturer.isPresent()) {
             throw new IllegalArgumentException("Производитель с таким номером телефона уже существует");
         }
-        return curManufacturer;
+        return curManufacturer.get();
     }
 
     private void validateManufacturerId(Long id) {
