@@ -2,22 +2,38 @@
 // then press Enter. You can now see whitespace characters in your code.
 package com.github.dd_buntar.goods_warehouse;
 
-import com.github.dd_buntar.goods_warehouse.domainobject.Manufacturer;
+import com.github.dd_buntar.goods_warehouse.app.cli.CliApp;
+import com.github.dd_buntar.goods_warehouse.app.services.*;
+import com.github.dd_buntar.goods_warehouse.app.services.domain.*;
+import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
+import com.github.dd_buntar.goods_warehouse.domain.entities.Shipment;
+import com.github.dd_buntar.goods_warehouse.domain.repositories.*;
+import com.github.dd_buntar.goods_warehouse.infrastructure.inmemory.*;
 
 public class Main {
     public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
-        Manufacturer a = new Manufacturer();
+        ManufacturerRepository manufacturerRepository = new ManufacturerRepositoryImpl();
+        ProductRepository productRepository = new ProductRepositoryImpl();
+        ShipmentRepository shipmentRepository = new ShipmentRepositoryImpl();
+        StorageLocationRepository storageLocationRepository = new StorageLocationRepositoryImpl();
+        StorehouseRepository storehouseRepository = new StorehouseRepositoryImpl();
 
+        ManufacturerService manufacturerService = new ManufacturerService(manufacturerRepository);
+        ProductService productService = new ProductService(productRepository);
+        ShipmentService shipmentService = new ShipmentService(shipmentRepository);
+        StorageLocationService storageLocationService = new StorageLocationService(storageLocationRepository);
+        StorehouseService storehouseService = new StorehouseService(storehouseRepository);
 
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
+        DomainStorehouseService domainStorehouseService = new DomainStorehouseService(storehouseService, shipmentService, storageLocationService);
+        DomainShipmentService domainShipmentService = new DomainShipmentService(shipmentService, domainStorehouseService, productService);
+        DomainProductService domainProductService = new DomainProductService(productService, domainShipmentService, manufacturerService);
+        DomainManufacturerService domainManufacturerService = new DomainManufacturerService(manufacturerService, domainProductService);
+        DomainStorageLocationService domainStorageLocationService = new DomainStorageLocationService(storageLocationService, domainStorehouseService);
 
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
-        }
+        CliApp cliApp = new CliApp(domainManufacturerService,
+                domainProductService, domainStorehouseService,
+                domainShipmentService, domainStorageLocationService);
+
+        cliApp.run();
     }
 }
