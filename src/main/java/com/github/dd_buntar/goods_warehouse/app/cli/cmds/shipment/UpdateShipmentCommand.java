@@ -1,27 +1,22 @@
 package com.github.dd_buntar.goods_warehouse.app.cli.cmds.shipment;
 
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.Command;
-import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainProductService;
 import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainShipmentService;
-import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Shipment;
-import lombok.AllArgsConstructor;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class UpdateShipmentCommand implements Command {
-    public static final String HELP_MESSAGE = "shipment-update (shipmentId, productId, " +
+    public static final String NAME = "shipment-update";
+    public static final String HELP_MESSAGE = NAME + " (shipmentId, productId, " +
             "purchasePrice, salePrice, productionDate, expiryDate, arrivalDate)" +
             "\n date format YYYY-MM-DDT10:30";
 
-    @Setter
-    private String[] args;
     private DomainShipmentService service;
 
     @Override
-    public void execute() {
+    public void execute(String[] args) {
         if (args.length != 7) {
             throw new IllegalArgumentException("Неправильное количество аргументов");
         }
@@ -49,5 +44,10 @@ public class UpdateShipmentCommand implements Command {
     @Override
     public String getHelp() {
         return HELP_MESSAGE;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

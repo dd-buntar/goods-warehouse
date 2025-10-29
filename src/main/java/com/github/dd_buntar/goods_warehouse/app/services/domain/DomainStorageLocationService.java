@@ -41,11 +41,7 @@ public class DomainStorageLocationService {
     }
 
     public List<StorageLocation> findByRackNumber(Integer rackNum) {
-        List<StorageLocation> locations = storageLocationService.findByRackNumber(rackNum);
-        if (locations.isEmpty()) {
-            throw new IllegalArgumentException("Стеллажа с таким номером не существует");
-        }
-        return locations;
+        return storageLocationService.findByRackNumber(rackNum);
     }
 
     public Set<Integer> findAllRackNumbers() {
@@ -53,10 +49,6 @@ public class DomainStorageLocationService {
     }
 
     public List<Integer> findShelvesByRack(Integer rackNum) {
-        List<Integer> shelves = storageLocationService.findShelvesByRack(rackNum);
-        if (shelves.isEmpty()) {
-            throw new IllegalArgumentException("Стеллажа с таким номером не существует");
-        }
-        return shelves;
+        return storageLocationService.findShelvesByRack(rackNum);
     }
 }
