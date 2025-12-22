@@ -4,6 +4,7 @@ target/
 .idea
 !**/src/main/**/out/
 !**/src/test/**/out/
+*.properties
 
 ### Eclipse ###
 .apt_generated
