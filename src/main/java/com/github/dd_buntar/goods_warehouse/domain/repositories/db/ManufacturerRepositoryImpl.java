@@ -5,8 +5,10 @@ import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.ManufacturerRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.Getter;
@@ -51,7 +53,7 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
             this.updateStatement = connection.prepareStatement(
                     "UPDATE manufacturers " +
                             "SET manufacturer_id = ?, name = ?, country = ?,  contact_phone = ?" +
-                            "WHERE id = ?"
+                            "WHERE manufacturer_id = ?"
             );
 
             this.findByNameStatement = connection.prepareStatement(
@@ -77,46 +79,153 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
 
     @Override
     public Optional<Manufacturer> create(Manufacturer entity) {
-        return Optional.empty();
+        try {
+            createStatement.setString(1, entity.getManufacturerName());
+            createStatement.setString(2, entity.getCountry());
+            createStatement.setString(3, entity.getContactPhone());
+            createStatement.executeUpdate();
+        } catch (SQLException e) {
+            entity = null;
+            throw new RuntimeException("Failed to create manufacturer", e);
+        }
+        return Optional.of(entity);
     }
 
     @Override
-    public Optional<Manufacturer> findById(Long aLong) {
-        return Optional.empty();
+    public Optional<Manufacturer> findById(Long id) {  // проверить, работает или нет ???
+        try {
+            findByIdStatement.setLong(1, id);
+            try (ResultSet result = findByIdStatement.executeQuery()) {
+                if (result.next()) {
+                    Manufacturer manufacturer = extractManufacturer(result);
+                    return Optional.of(manufacturer);
+                } else {
+                    return Optional.empty();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
     public List<Manufacturer> findAll() {
-        return null;
+        try (ResultSet result = findAllStatement.executeQuery()) {
+            return extractManufacturerList(result);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get all manufacturers", e);
+        }
     }
 
     @Override
     public Optional<Manufacturer> update(Manufacturer entity) {
-        return Optional.empty();
+        try {
+            updateStatement.setLong(1, entity.getManufacturerId());
+            updateStatement.setLong(5, entity.getManufacturerId());
+            updateStatement.setString(2, entity.getManufacturerName());
+            updateStatement.setString(3, entity.getCountry());
+            updateStatement.setString(4, entity.getContactPhone());
+
+            int updatedRows = updateStatement.executeUpdate();
+            if (updatedRows == 0) {
+                return Optional.empty();
+            }
+            return Optional.of(entity);
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update manufacturer " + entity.getManufacturerId(), e);
+        }
     }
 
     @Override
-    public boolean deleteById(Long aLong) {
-        return false;
+    public boolean deleteById(Long id) {
+        try {
+            deleteByIdStatement.setLong(1, id);
+            int deletedRows = deleteByIdStatement.executeUpdate();
+            if (deletedRows == 0) {
+                return false;
+            }
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to delete manufacturer by id " + id, e);
+        }
     }
 
     @Override
     public Optional<Manufacturer> findByName(String name) {
-        return Optional.empty();
+        try {
+            findByNameStatement.setString(1, name);
+            try (ResultSet result = findByIdStatement.executeQuery()) {
+                if (result.next()) {
+                    Manufacturer manufacturer = extractManufacturer(result);
+                    return Optional.of(manufacturer);
+                } else {
+                    return Optional.empty();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
     public List<Manufacturer> findByCountry(String country) {
-        return null;
+        try {
+            findByCountryStatement.setString(1, country);
+            try (ResultSet result = findByCountryStatement.executeQuery()) {
+                return extractManufacturerList(result);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
     public Optional<Manufacturer> findByPhone(String phone) {
-        return Optional.empty();
+        try {
+            findByPhoneStatement.setString(1, phone);
+            try (ResultSet result = findByPhoneStatement.executeQuery()) {
+                if (result.next()) {
+                    Manufacturer manufacturer = extractManufacturer(result);
+                    return Optional.of(manufacturer);
+                } else {
+                    return Optional.empty();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
     public Optional<Manufacturer> updatePhone(Long manufacturerId, String newPhone) {
+        Optional<Manufacturer> m = findById(manufacturerId);
+        if (m.isPresent()) {
+            return update(Manufacturer.builder()
+                    .manufacturerId(manufacturerId)
+                    .manufacturerName(m.get().getManufacturerName())
+                    .country(m.get().getCountry())
+                    .contactPhone(newPhone)
+                    .build()
+            );
+        }
         return Optional.empty();
+    }
+
+    private List<Manufacturer> extractManufacturerList(ResultSet result) throws SQLException {
+        List<Manufacturer> manufacturers = new ArrayList<>();
+        while (result.next()) {
+            manufacturers.add(extractManufacturer(result));
+        }
+        return manufacturers;
+    }
+
+    private Manufacturer extractManufacturer(ResultSet result) throws SQLException {
+        return Manufacturer.builder()
+                .manufacturerId(result.getLong("manufacturer_id"))
+                .manufacturerName(result.getString("name"))
+                .contactPhone(result.getString("contact_phone"))
+                .country(result.getString("country"))
+                .build();
     }
 }
