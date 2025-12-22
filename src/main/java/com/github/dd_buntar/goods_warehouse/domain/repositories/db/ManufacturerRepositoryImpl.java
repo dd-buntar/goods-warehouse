@@ -52,22 +52,22 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
 
             this.updateStatement = connection.prepareStatement(
                     "UPDATE manufacturers " +
-                            "SET manufacturer_id = ?, name = ?, country = ?,  contact_phone = ?" +
+                            "SET name = ?, country = ?,  contact_phone = ? " +
                             "WHERE manufacturer_id = ?"
             );
 
             this.findByNameStatement = connection.prepareStatement(
-                    "SELECT * FROM manufacturers" +
+                    "SELECT * FROM manufacturers " +
                             "WHERE name = ?"
             );
 
             this.findByCountryStatement = connection.prepareStatement(
-                    "SELECT * FROM manufacturers" +
+                    "SELECT * FROM manufacturers " +
                             "WHERE country = ?"
             );
 
             this.findByPhoneStatement = connection.prepareStatement(
-                    "SELECT * FROM manufacturers" +
+                    "SELECT * FROM manufacturers " +
                             "WHERE contact_phone = ?"
             );
 
@@ -120,11 +120,10 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
     @Override
     public Optional<Manufacturer> update(Manufacturer entity) {
         try {
-            updateStatement.setLong(1, entity.getManufacturerId());
-            updateStatement.setLong(5, entity.getManufacturerId());
-            updateStatement.setString(2, entity.getManufacturerName());
-            updateStatement.setString(3, entity.getCountry());
-            updateStatement.setString(4, entity.getContactPhone());
+            updateStatement.setLong(4, entity.getManufacturerId());
+            updateStatement.setString(1, entity.getManufacturerName());
+            updateStatement.setString(2, entity.getCountry());
+            updateStatement.setString(3, entity.getContactPhone());
 
             int updatedRows = updateStatement.executeUpdate();
             if (updatedRows == 0) {
@@ -155,7 +154,7 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
     public Optional<Manufacturer> findByName(String name) {
         try {
             findByNameStatement.setString(1, name);
-            try (ResultSet result = findByIdStatement.executeQuery()) {
+            try (ResultSet result = findByNameStatement.executeQuery()) {
                 if (result.next()) {
                     Manufacturer manufacturer = extractManufacturer(result);
                     return Optional.of(manufacturer);
