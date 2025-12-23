@@ -2,6 +2,7 @@ package com.github.dd_buntar.goods_warehouse.domain.repositories.db;
 
 import com.github.dd_buntar.goods_warehouse.db.PostgresSQLManager;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
+import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.ManufacturerRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +18,6 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
     @Getter(lazy = true)
     private static final ManufacturerRepositoryImpl instance = new ManufacturerRepositoryImpl();
 
-    private Statement statement;
     private PreparedStatement createStatement;
     private PreparedStatement deleteByIdStatement;
     private PreparedStatement updateStatement;
@@ -30,11 +30,10 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
     public ManufacturerRepositoryImpl() {
         Connection connection = PostgresSQLManager.getInstance().getConnection();
         try {
-            this.statement = connection.createStatement();
-
             this.createStatement = connection.prepareStatement(
                     "INSERT INTO manufacturers (name, country, contact_phone) " +
-                            "VALUES (?, ?, ?)"
+                            "VALUES (?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS
             );
 
             this.findByIdStatement = connection.prepareStatement(
@@ -83,12 +82,31 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
             createStatement.setString(1, entity.getManufacturerName());
             createStatement.setString(2, entity.getCountry());
             createStatement.setString(3, entity.getContactPhone());
-            createStatement.executeUpdate();
+
+            int affectedRows = createStatement.executeUpdate();
+
+            if (affectedRows == 0) {
+                return Optional.empty();
+            }
+
+            try (ResultSet generatedKeys = createStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    Long generatedId = generatedKeys.getLong(1);
+                    return Optional.of(Manufacturer.builder()
+                            .manufacturerId(generatedId)
+                            .manufacturerName(entity.getManufacturerName())
+                            .country(entity.getCountry())
+                            .contactPhone(entity.getContactPhone())
+                            .build());
+                }
+            }
+
+            // Если ID нет, возвращаем оригинальный объект без ID
+            return Optional.of(entity);
+
         } catch (SQLException e) {
-            entity = null;
             throw new RuntimeException("Failed to create manufacturer", e);
         }
-        return Optional.of(entity);
     }
 
     @Override
@@ -104,7 +122,7 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException("Failed to get manufacturer " + id, e);
         }
     }
 
@@ -141,10 +159,7 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
         try {
             deleteByIdStatement.setLong(1, id);
             int deletedRows = deleteByIdStatement.executeUpdate();
-            if (deletedRows == 0) {
-                return false;
-            }
-            return true;
+            return deletedRows != 0;
         } catch (SQLException e) {
             throw new RuntimeException("Failed to delete manufacturer by id " + id, e);
         }
