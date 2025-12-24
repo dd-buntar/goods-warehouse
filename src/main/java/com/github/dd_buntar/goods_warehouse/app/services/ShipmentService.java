@@ -2,6 +2,7 @@ package com.github.dd_buntar.goods_warehouse.app.services;
 
 import com.github.dd_buntar.goods_warehouse.domain.entities.Shipment;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.ShipmentRepository;
+import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -67,7 +68,8 @@ public class ShipmentService {
     public List<Shipment> findByProductId(@NonNull final Long productId) {
         List<Shipment> shipments = shipmentRepository.findByProductId(productId);
         if (shipments.isEmpty()) {
-            throw new IllegalArgumentException("Поставок с продуктом id=" + productId + " не существует");
+            return new ArrayList<>();
+            //throw new IllegalArgumentException("Поставок с продуктом id=" + productId + " не существует");
         }
         return shipments;
     }
