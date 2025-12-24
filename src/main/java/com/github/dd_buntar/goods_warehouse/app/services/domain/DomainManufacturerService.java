@@ -5,23 +5,18 @@ import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
 import com.github.dd_buntar.goods_warehouse.app.services.ManufacturerService;
 
 import java.util.*;
+import lombok.AllArgsConstructor;
 
-// allArgs пон
+@AllArgsConstructor
 public class DomainManufacturerService {
     private final ManufacturerService manufacturerService;
     private final DomainProductService domainProductService;
 
-    public DomainManufacturerService(ManufacturerService manufacturerService,
-                                     DomainProductService domainProductService) {
-        this.manufacturerService = manufacturerService;
-        this.domainProductService = domainProductService;
-    }
-
-    public Optional<Manufacturer> create(final Manufacturer entity) {
+    public Manufacturer create(final Manufacturer entity) {
         return manufacturerService.create(entity);
     }
 
-    public Optional<Manufacturer> findById(final Long id) {
+    public Manufacturer findById(final Long id) {
         return manufacturerService.findById(id);
     }
 
@@ -29,21 +24,21 @@ public class DomainManufacturerService {
         return manufacturerService.findAll();
     }
 
-    public Optional<Manufacturer> update(final Manufacturer entity) {
+    public Manufacturer update(final Manufacturer entity) {
         return manufacturerService.update(entity);
     }
 
-    public boolean deleteById(final Long id) {
+    public void deleteById(final Long id) {
         List<Product> products = domainProductService.findByManufacturerId(id);
         if (!products.isEmpty()) {
             for (Product p : products) {
                 domainProductService.deleteById(p.getProductId());
             }
         }
-        return manufacturerService.deleteById(id);
+        manufacturerService.deleteById(id);
     }
 
-    public Optional<Manufacturer> findByName(String name) {
+    public Manufacturer findByName(String name) {
         return manufacturerService.findByName(name);
     }
 
@@ -51,15 +46,12 @@ public class DomainManufacturerService {
         return manufacturerService.findByCountry(country);
     }
 
-    public Optional<Manufacturer> findByPhone(String phone) {
+    public Manufacturer findByPhone(String phone) {
         return manufacturerService.findByPhone(phone);
     }
 
-    public Optional<Manufacturer> updatePhone(Long manufacturerId, String newPhone) {
-        Optional<Manufacturer> manufacturer = manufacturerService.findById(manufacturerId);
-        if (!manufacturer.isPresent()) {
-            throw new IllegalArgumentException("Производителя с таким id не существует");
-        }
+    public Manufacturer updatePhone(Long manufacturerId, String newPhone) {
+        manufacturerService.findById(manufacturerId);
         return manufacturerService.updatePhone(manufacturerId, newPhone);
     }
 }

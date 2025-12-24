@@ -7,26 +7,20 @@ import com.github.dd_buntar.goods_warehouse.app.services.StorehouseService;
 
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 public class DomainStorehouseService {
     private final StorehouseService storehouseService;
     private final ShipmentService shipmentService;
     private final StorageLocationService storageLocationService;
 
-    public DomainStorehouseService(StorehouseService storehouseService,
-                                   ShipmentService shipmentService,
-                                   StorageLocationService storageLocationService) {
-        this.storehouseService = storehouseService;
-        this.shipmentService = shipmentService;
-        this.storageLocationService = storageLocationService;
-    }
-
-    public Optional<Storehouse> create(final Storehouse entity) {
+    public Storehouse create(final Storehouse entity) {
         validateStorehouseRelation(entity, shipmentService, storageLocationService);
         return storehouseService.create(entity);
     }
 
-    public Optional<Storehouse> findById(final Long id) {
+    public Storehouse findById(final Long id) {
         return storehouseService.findById(id);
     }
 
@@ -34,13 +28,13 @@ public class DomainStorehouseService {
         return storehouseService.findAll();
     }
 
-    public Optional<Storehouse> update(final Storehouse entity) {
+    public Storehouse update(final Storehouse entity) {
         validateStorehouseRelation(entity, shipmentService, storageLocationService);
         return storehouseService.update(entity);
     }
 
-    public boolean deleteById(final Long id) {
-        return storehouseService.deleteById(id);
+    public void deleteById(final Long id) {
+        storehouseService.deleteById(id);
     }
 
     public List<Storehouse> findByLocationId(Long locationId) {
@@ -51,14 +45,10 @@ public class DomainStorehouseService {
         return storehouseService.findByShipmentId(shipmentId);
     }
 
-    private void validateStorehouseRelation(Storehouse storehouse,
+    private void validateStorehouseRelation(Storehouse entity,
                                             ShipmentService shipmentService,
                                             StorageLocationService storageLocationService) {
-        if (!shipmentService.findById(storehouse.getShipmentId()).isPresent()) {
-            throw new IllegalArgumentException("Поставки с таким id не существует");
-        }
-        if (!storageLocationService.findById(storehouse.getLocationId()).isPresent()) {
-            throw new IllegalArgumentException("Локации с таким id не существует");
-        }
+        shipmentService.findById(entity.getShipmentId());
+        storageLocationService.findById(entity.getLocationId());
     }
 }

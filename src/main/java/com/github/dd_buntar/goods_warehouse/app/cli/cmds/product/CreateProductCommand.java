@@ -1,23 +1,19 @@
 package com.github.dd_buntar.goods_warehouse.app.cli.cmds.product;
 
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.Command;
-import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainManufacturerService;
 import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainProductService;
-import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
 import lombok.AllArgsConstructor;
-import lombok.Setter;
 
 @AllArgsConstructor
 public class CreateProductCommand implements Command {
-    public static final String HELP_MESSAGE = "product-create (name, manufacturerId, weight, description)";
+    public static final String NAME = "product-create";
+    public static final String HELP_MESSAGE = NAME + "product-create (name, manufacturerId, weight, description)";
 
-    @Setter
-    private String[] args;
     private DomainProductService service;
 
     @Override
-    public void execute() {
+    public void execute(String[] args) {
         if (args.length != 4) {
             throw new IllegalArgumentException("Неправильное количество аргументов");
         }
@@ -39,5 +35,10 @@ public class CreateProductCommand implements Command {
     @Override
     public String getHelp() {
         return HELP_MESSAGE;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

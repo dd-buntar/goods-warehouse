@@ -5,85 +5,85 @@ import com.github.dd_buntar.goods_warehouse.app.cli.cmds.manufacturer.*;
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.product.*;
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.shipment.*;
 import com.github.dd_buntar.goods_warehouse.app.cli.cmds.storehouse.*;
+import com.github.dd_buntar.goods_warehouse.app.services.ServiceFactory;
 import com.github.dd_buntar.goods_warehouse.app.services.domain.*;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 
 import java.util.Arrays;
 
 @AllArgsConstructor
 public class CommandFactory {
-    private DomainManufacturerService manufacturerService;
-    private DomainProductService productService;
-    private DomainStorehouseService storehouseService;
-    private DomainShipmentService shipmentService;
-    private DomainStorageLocationService storageLocationService;
+    private List<Command> commands;
+    private MessageCommand helpCommand = new MessageCommand("help", "");
 
-    public Command create(String[] args) {
-        String commandName = args[0];
-        String[] commandArgs = Arrays.copyOfRange(args, 1, args.length);
+    public CommandFactory(ServiceFactory serviceFactory) {
+        DomainManufacturerService manufacturerService = serviceFactory.getDomainManufacturerService();
+        DomainProductService productService = serviceFactory.getDomainProductService();
+        DomainShipmentService shipmentService = serviceFactory.getDomainShipmentService();
+        DomainStorehouseService storehouseService = serviceFactory.getDomainStorehouseService();
+        DomainStorageLocationService storageLocationService = serviceFactory.getDomainStorageLocationService();
 
-        switch (commandName) {
-            case "manufacturer-create":
-                return new CreateManufacturerCommand(commandArgs, manufacturerService);
-            case "manufacturer-findAll":
-                return new FindAllManufacturerCommand(commandArgs, manufacturerService);
-            case "manufacturer-deleteById":
-                return new DeleteByIdManufacturerCommand(commandArgs, manufacturerService);
-            case "manufacturer-findById":
-                return new FindByIdManufacturerCommand(commandArgs, manufacturerService);
-            case "manufacturer-update":
-                return new UpdateManufacturerCommand(commandArgs, manufacturerService);
+        this.commands = new ArrayList<>();
 
-            case "product-create":
-                return new CreateProductCommand(commandArgs, productService);
-            case "product-findAll":
-                return new FindAllProductCommand(commandArgs, productService);
-            case "product-deleteById":
-                return new DeleteByIdProductCommand(commandArgs, productService);
-            case "product-findById":
-                return new FindByIdProductCommand(commandArgs, productService);
-            case "product-update":
-                return new UpdateProductCommand(commandArgs, productService);
+        this.commands.add(new CreateManufacturerCommand(manufacturerService));
+        this.commands.add(new FindAllManufacturerCommand(manufacturerService));
+        this.commands.add(new DeleteByIdManufacturerCommand(manufacturerService));
+        this.commands.add(new FindByIdManufacturerCommand(manufacturerService));
+        this.commands.add(new UpdateManufacturerCommand(manufacturerService));
 
-            case "shipment-create":
-                return new CreateShipmentCommand(commandArgs, shipmentService);
-            case "shipment-findAll":
-                return new FindAllShipmentCommand(commandArgs, shipmentService);
-            case "shipment-deleteById":
-                return new DeleteByIdShipmentCommand(commandArgs, shipmentService);
-            case "shipment-findById":
-                return new FindByIdShipmentCommand(commandArgs, shipmentService);
-            case "shipment-update":
-                return new UpdateShipmentCommand(commandArgs, shipmentService);
+        this.commands.add(new CreateProductCommand(productService));
+        this.commands.add(new FindAllProductCommand(productService));
+        this.commands.add(new DeleteByIdProductCommand(productService));
+        this.commands.add(new FindByIdProductCommand(productService));
+        this.commands.add(new UpdateProductCommand(productService));
 
-            case "location-create":
-                return new CreateStorageLocationCommand(commandArgs, storageLocationService);
-            case "location-findAll":
-                return new FindAllStorageLocationCommand(commandArgs, storageLocationService);
-            case "location-deleteById":
-                return new DeleteByIdStorageLocationCommand(commandArgs, storageLocationService);
-            case "location-findById":
-                return new FindByIdStorageLocationCommand(commandArgs, storageLocationService);
-            case "location-update":
-                return new UpdateStorageLocationCommand(commandArgs, storageLocationService);
+        this.commands.add(new CreateShipmentCommand(shipmentService));
+        this.commands.add(new FindAllShipmentCommand(shipmentService));
+        this.commands.add(new DeleteByIdShipmentCommand(shipmentService));
+        this.commands.add(new FindByIdShipmentCommand(shipmentService));
+        this.commands.add(new UpdateShipmentCommand(shipmentService));
 
-            case "storehouse-create":
-                return new CreateStorehouseCommand(commandArgs, storehouseService);
-            case "storehouse-findAll":
-                return new FindAllStorehouseCommand(commandArgs, storehouseService);
-            case "storehouse-deleteById":
-                return new DeleteByIdStorehouseCommand(commandArgs, storehouseService);
-            case "storehouse-findById":
-                return new FindByIdStorehouseCommand(commandArgs, storehouseService);
-            case "storehouse-update":
-                return new UpdateStorehouseCommand(commandArgs, storehouseService);
+        this.commands.add(new CreateStorageLocationCommand(storageLocationService));
+        this.commands.add(new FindAllStorageLocationCommand(storageLocationService));
+        this.commands.add(new DeleteByIdStorageLocationCommand(storageLocationService));
+        this.commands.add(new FindByIdStorageLocationCommand(storageLocationService));
+        this.commands.add(new UpdateStorageLocationCommand(storageLocationService));
 
-            case "exit":
-                break;
+        this.commands.add(new CreateStorehouseCommand(storehouseService));
+        this.commands.add(new FindAllStorehouseCommand(storehouseService));
+        this.commands.add(new DeleteByIdStorehouseCommand(storehouseService));
+        this.commands.add(new FindByIdStorehouseCommand(storehouseService));
+        this.commands.add(new UpdateStorehouseCommand(storehouseService));
 
-            default:
-                return new MessageCommand();
+        this.commands.add(this.helpCommand);
+
+        this.updateHelpMsg();
+    }
+
+    public Command recognize(String commandName) {
+        for (Command command : commands) {
+            if (command.getName().equals(commandName)) {
+                return command;
+            }
         }
+
         return null;
+    }
+
+    private void updateHelpMsg() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("List of commands:\n");
+
+        for (Command command : commands) {
+            sb.append("\t");
+            sb.append(command.getHelp());
+            sb.append("\n");
+        }
+
+        sb.deleteCharAt(sb.length() - 1);
+        helpCommand.setMsg(sb.toString());
     }
 }
