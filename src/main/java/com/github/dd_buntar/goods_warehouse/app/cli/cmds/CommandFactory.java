@@ -57,6 +57,7 @@ public class CommandFactory {
         this.commands.add(new FindByIdStorehouseCommand(storehouseService));
         this.commands.add(new UpdateStorehouseCommand(storehouseService));
 
+        this.commands.add(new ExitCommand());
         this.commands.add(this.helpCommand);
 
         this.updateHelpMsg();

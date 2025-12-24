@@ -3,6 +3,7 @@ package com.github.dd_buntar.goods_warehouse.app.services;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.ProductRepository;
+import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -67,7 +68,8 @@ public class ProductService {
     public List<Product> findByManufacturerId(@NonNull final Long manufacturerId) {
         List<Product> products = productRepository.findByManufacturerId(manufacturerId);
         if (products.isEmpty()) {
-            throw new IllegalArgumentException("Продуктов с производителем " + manufacturerId + " не существует");
+            return new ArrayList<>();
+            //throw new IllegalArgumentException("Продуктов с производителем " + manufacturerId + " не существует");
         }
         return products;
     }

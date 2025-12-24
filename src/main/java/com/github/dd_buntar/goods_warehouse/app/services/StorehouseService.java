@@ -2,6 +2,7 @@ package com.github.dd_buntar.goods_warehouse.app.services;
 
 import com.github.dd_buntar.goods_warehouse.domain.entities.Storehouse;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.StorehouseRepository;
+import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -58,7 +59,8 @@ public class StorehouseService {
     public List<Storehouse> findByLocationId(@NonNull final Long locationId) {
         List<Storehouse> storehouses = storehouseRepository.findByLocationId(locationId);
         if (storehouses.isEmpty()) {
-            throw new IllegalArgumentException("Поставки на складе с местоположением id= " + locationId + " не существует");
+            return new ArrayList<>();
+            //throw new IllegalArgumentException("Поставки на складе с местоположением id= " + locationId + " не существует");
         }
         return storehouses;
     }
@@ -66,7 +68,8 @@ public class StorehouseService {
     public List<Storehouse> findByShipmentId(@NonNull final Long shipmentId) {
         List<Storehouse> storehouses = storehouseRepository.findByShipmentId(shipmentId);
         if (storehouses.isEmpty()) {
-            throw new IllegalArgumentException("Поставки с id= " + shipmentId + " на складе нет");
+            return new ArrayList<>();
+            //throw new IllegalArgumentException("Поставки с id= " + shipmentId + " на складе нет");
         }
         return storehouses;
     }
