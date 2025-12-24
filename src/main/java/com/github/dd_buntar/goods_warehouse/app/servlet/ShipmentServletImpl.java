@@ -66,7 +66,7 @@ public class ShipmentServletImpl extends HttpServlet {
 
             final Long productId = Long.valueOf(req.getParameter("product_id"));
             final Integer purchasePrice = Integer.valueOf(req.getParameter("purchase_price"));
-            final Integer salePrice = Integer.valueOf(req.getParameter("sale_price");
+            final Integer salePrice = Integer.valueOf(req.getParameter("sale_price"));
 
             // Парсинг дат
             DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
