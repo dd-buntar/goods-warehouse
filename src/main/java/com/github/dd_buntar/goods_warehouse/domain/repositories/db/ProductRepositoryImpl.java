@@ -17,7 +17,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Getter(lazy = true)
     private static final ProductRepositoryImpl instance = new ProductRepositoryImpl();
 
-    private Statement statement;
     private PreparedStatement createStatement;
     private PreparedStatement deleteByIdStatement;
     private PreparedStatement updateStatement;
@@ -29,8 +28,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     public ProductRepositoryImpl() {
         Connection connection = PostgresSQLManager.getInstance().getConnection();
         try {
-            this.statement = connection.createStatement();
-
             this.createStatement = connection.prepareStatement(
                     "INSERT INTO products (name, manufacturer_id, weight_grams, description) " +
                             "VALUES (?, ?, ?, ?)",
