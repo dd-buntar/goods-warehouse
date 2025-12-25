@@ -1,6 +1,7 @@
 package com.github.dd_buntar.goods_warehouse.app.servlet;
 
 import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainProductService;
+import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,12 +25,14 @@ public class ProductServletImpl extends HttpServlet {
 
         try {
             if (pathInfo == null || pathInfo.equals("/")) {  // GET /api/products - получить все продукты
-                List<Product> products = productService.findAll();
-                StringBuilder sb = new StringBuilder();
-                for (Product p : products) {
-                    sb.append(p.toString()).append("\n");
+
+                try {
+                    List<Product> products = productService.findAll();
+                    req.setAttribute("product", products);
+                    req.getRequestDispatcher("/views/products.jsp").forward(req, resp);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
-                resp.getWriter().write(sb.toString());
 
             } else if (pathInfo.startsWith("/")) {  // GET /api/products/{id} - получить по ID
                 Long id = Long.parseLong(pathInfo.substring(1));

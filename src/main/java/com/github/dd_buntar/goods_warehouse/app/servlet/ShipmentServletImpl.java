@@ -1,6 +1,7 @@
 package com.github.dd_buntar.goods_warehouse.app.servlet;
 
 import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainShipmentService;
+import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Shipment;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -26,12 +27,13 @@ public class ShipmentServletImpl extends HttpServlet {
 
         try {
             if (pathInfo == null || pathInfo.equals("/")) {  // GET /api/shipments - получить все
-                List<Shipment> shipments = shipmentService.findAll();
-                StringBuilder sb = new StringBuilder();
-                for (Shipment s : shipments) {
-                    sb.append(s.toString()).append("\n");
+                try {
+                    List<Shipment> shipments = shipmentService.findAll();
+                    req.setAttribute("shipment", shipments);
+                    req.getRequestDispatcher("/views/shipments.jsp").forward(req, resp);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
-                resp.getWriter().write(sb.toString());
 
             } else if (pathInfo.startsWith("/")) {  // GET /api/shipments/{id} - получить по ID
                 Long id = Long.parseLong(pathInfo.substring(1));

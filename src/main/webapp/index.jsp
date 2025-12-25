@@ -2,17 +2,8 @@
 <html>
 <head>
     <title>Goods Warehouse System</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f5f5f5; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1 { color: #333; text-align: center; }
-        .menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 30px; }
-        .card { background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; border-left: 5px solid #007bff; }
-        .card h3 { margin-top: 0; color: #007bff; }
-        .card a { display: inline-block; margin: 5px; padding: 8px 15px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; }
-        .card a:hover { background: #0056b3; }
-        .links { margin-top: 10px; }
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
 </head>
 <body>
     <div class="container">
@@ -22,7 +13,7 @@
                 <h3>📦 Manufacturers</h3>
                 <p>Manage product manufacturers</p>
                 <div class="links">
-                    <a href="manufacturers.jsp">View All</a>
+                    <a href="${pageContext.request.contextPath}/manufacturer">View All</a>
                     <a href="add_manufacturer.jsp">Add New</a>
                 </div>
             </div>
@@ -31,7 +22,7 @@
                 <h3>📦 Products</h3>
                 <p>Manage products catalog</p>
                 <div class="links">
-                    <a href="products.jsp">View All</a>
+                    <a href="${pageContext.request.contextPath}/product">View All</a>
                     <a href="add_product.jsp">Add New</a>
                 </div>
             </div>
@@ -40,7 +31,7 @@
                 <h3>📍 Storage Locations</h3>
                 <p>Manage warehouse locations</p>
                 <div class="links">
-                    <a href="storage_locations.jsp">View All</a>
+                    <a href="${pageContext.request.contextPath}/storageLocation">View All</a>
                     <a href="add_storage_location.jsp">Add New</a>
                 </div>
             </div>
@@ -49,7 +40,7 @@
                 <h3>🚚 Shipments</h3>
                 <p>Manage product shipments</p>
                 <div class="links">
-                    <a href="shipments.jsp">View All</a>
+                    <a href="${pageContext.request.contextPath}/shipment">View All</a>
                     <a href="add_shipment.jsp">Add New</a>
                 </div>
             </div>
@@ -58,7 +49,7 @@
                 <h3>🏬 Storehouse</h3>
                 <p>Manage warehouse inventory</p>
                 <div class="links">
-                    <a href="storehouse.jsp">View All</a>
+                    <a href="${pageContext.request.contextPath}/storehouse">View All</a>
                     <a href="add_storehouse.jsp">Add New</a>
                 </div>
             </div>

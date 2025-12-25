@@ -1,6 +1,7 @@
 package com.github.dd_buntar.goods_warehouse.app.servlet;
 
 import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainStorehouseService;
+import com.github.dd_buntar.goods_warehouse.domain.entities.StorageLocation;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Storehouse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,12 +25,13 @@ public class StorehouseServletImpl extends HttpServlet {
 
         try {
             if (pathInfo == null || pathInfo.equals("/")) {  // GET /api/storehouse - получить все
-                List<Storehouse> storehouseItems = storehouseService.findAll();
-                StringBuilder sb = new StringBuilder();
-                for (Storehouse item : storehouseItems) {
-                    sb.append(item.toString()).append("\n");
+                try {
+                    List<Storehouse> storehouses = storehouseService.findAll();
+                    req.setAttribute("storehouse", storehouses);
+                    req.getRequestDispatcher("/views/storehouses.jsp").forward(req, resp);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
-                resp.getWriter().write(sb.toString());
 
             } else if (pathInfo.startsWith("/")) {  // GET /api/storehouse/{id} - получить по ID
                 Long id = Long.parseLong(pathInfo.substring(1));

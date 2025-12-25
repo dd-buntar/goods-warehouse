@@ -24,12 +24,13 @@ public class ManufacturerServletImpl extends HttpServlet {
 
         try {
             if (pathInfo == null || pathInfo.equals("/")) {  // GET /api/books - получить всех
-                List<Manufacturer> manufacturers = manufacturerService.findAll();
-                StringBuilder sb = new StringBuilder();
-                for (Manufacturer m : manufacturers) {
-                    sb.append(m.toString()).append("\n");
+                try {
+                    List<Manufacturer> manufacturers = manufacturerService.findAll();
+                        req.setAttribute("manufacturer", manufacturers);
+                        req.getRequestDispatcher("/views/manufacturers.jsp").forward(req, resp);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
-                resp.getWriter().write(sb.toString());
 
             } else if (pathInfo.startsWith("/")) {  // GET /api/books/{id} - получить по ID
                 Long id = Long.parseLong(pathInfo.substring(1));

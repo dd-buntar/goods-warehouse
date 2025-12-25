@@ -1,5 +1,9 @@
 package com.github.dd_buntar.goods_warehouse.app;
 
+import com.github.dd_buntar.goods_warehouse.app.servlet.ProductServletImpl;
+import com.github.dd_buntar.goods_warehouse.app.servlet.ShipmentServletImpl;
+import com.github.dd_buntar.goods_warehouse.app.servlet.StorageLocationServletImpl;
+import com.github.dd_buntar.goods_warehouse.app.servlet.StorehouseServletImpl;
 import java.io.File;
 
 import com.github.dd_buntar.goods_warehouse.app.services.ServiceFactory;
@@ -70,18 +74,22 @@ public class WebServer {
     private void addServlets(Context ctx) {
         Tomcat.addServlet(ctx, "manufacturerServlet",
                 new ManufacturerServletImpl(serviceFactory.getDomainManufacturerService()));
-        ctx.addServletMappingDecoded("/manufacturers", "manufacturerServlet");
+        ctx.addServletMappingDecoded("/manufacturer", "manufacturerServlet");
+
         Tomcat.addServlet(ctx, "productServlet",
-                new ManufacturerServletImpl(serviceFactory.getDomainManufacturerService()));
-        ctx.addServletMappingDecoded("/products", "productServlet");
+                new ProductServletImpl(serviceFactory.getDomainProductService()));
+        ctx.addServletMappingDecoded("/product", "productServlet");
+
         Tomcat.addServlet(ctx, "shipmentServlet",
-                new ManufacturerServletImpl(serviceFactory.getDomainManufacturerService()));
-        ctx.addServletMappingDecoded("/shipments", "shipmentServlet");
+                new ShipmentServletImpl(serviceFactory.getDomainShipmentService()));
+        ctx.addServletMappingDecoded("/shipment", "shipmentServlet");
+
         Tomcat.addServlet(ctx, "storageLocationServlet",
-                new ManufacturerServletImpl(serviceFactory.getDomainManufacturerService()));
-        ctx.addServletMappingDecoded("/storage-locations", "storageLocationServlet");
+                new StorageLocationServletImpl(serviceFactory.getDomainStorageLocationService()));
+        ctx.addServletMappingDecoded("/storageLocation", "storageLocationServlet");
+
         Tomcat.addServlet(ctx, "storehouseServlet",
-                new ManufacturerServletImpl(serviceFactory.getDomainManufacturerService()));
-        ctx.addServletMappingDecoded("/storehouses", "storehouseServlet");
+                new StorehouseServletImpl(serviceFactory.getDomainStorehouseService()));
+        ctx.addServletMappingDecoded("/storehouse", "storehouseServlet");
     }
 }

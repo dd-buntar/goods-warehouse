@@ -1,6 +1,7 @@
 package com.github.dd_buntar.goods_warehouse.app.servlet;
 
 import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainStorageLocationService;
+import com.github.dd_buntar.goods_warehouse.domain.entities.Shipment;
 import com.github.dd_buntar.goods_warehouse.domain.entities.StorageLocation;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,12 +25,13 @@ public class StorageLocationServletImpl extends HttpServlet {
 
         try {
             if (pathInfo == null || pathInfo.equals("/")) {  // GET /api/storage-locations - получить все
-                List<StorageLocation> locations = storageLocationService.findAll();
-                StringBuilder sb = new StringBuilder();
-                for (StorageLocation loc : locations) {
-                    sb.append(loc.toString()).append("\n");
+                try {
+                    List<StorageLocation> locations = storageLocationService.findAll();
+                    req.setAttribute("storageLocation", locations);
+                    req.getRequestDispatcher("/views/storageLocation.jsp").forward(req, resp);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
-                resp.getWriter().write(sb.toString());
 
             } else if (pathInfo.startsWith("/")) {  // GET /api/storage-locations/{id} - получить по ID
                 Long id = Long.parseLong(pathInfo.substring(1));
