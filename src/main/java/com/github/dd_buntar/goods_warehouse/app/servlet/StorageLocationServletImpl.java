@@ -12,7 +12,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-@WebServlet("api/storage-locations/*")
+//@WebServlet("api/storage-locations/*")
 public class StorageLocationServletImpl extends HttpServlet {
     private DomainStorageLocationService storageLocationService;
 

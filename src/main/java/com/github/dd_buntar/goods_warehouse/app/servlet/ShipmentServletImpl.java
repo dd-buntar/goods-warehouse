@@ -14,7 +14,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-@WebServlet("api/shipments/*")
+//@WebServlet("api/shipments/*")
 public class ShipmentServletImpl extends HttpServlet {
     private DomainShipmentService shipmentService;
 

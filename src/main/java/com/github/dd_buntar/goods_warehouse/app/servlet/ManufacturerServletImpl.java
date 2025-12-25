@@ -12,7 +12,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-@WebServlet("api/manufacturers/*")
+//@WebServlet("api/manufacturers/*")
 public class ManufacturerServletImpl extends HttpServlet {
     private DomainManufacturerService manufacturerService;
 
