@@ -66,8 +66,8 @@ public class StorageLocationServletImpl extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         try {
-            final Integer rackNum = Integer.valueOf(req.getParameter("rack_num"));
-            final Integer shelfNum = Integer.valueOf(req.getParameter("shelf_num"));
+            final Integer rackNum = Integer.valueOf(req.getParameter("rackNum"));
+            final Integer shelfNum = Integer.valueOf(req.getParameter("shelfNum"));
 
             storageLocationService.create(StorageLocation.builder()
                     .rackNum(rackNum)
