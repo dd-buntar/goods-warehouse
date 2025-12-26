@@ -43,7 +43,10 @@ public class ManufacturerServletImpl extends HttpServlet {
 //                }
 
             } else if (pathInfo.endsWith("/edit")) {
-                doPut(req, resp);
+                Long id = Long.parseLong(pathInfo.substring(1, pathInfo.length() - "/edit".length()));
+                Manufacturer curManufacturer = manufacturerService.findById(id);
+                req.setAttribute("curManufacturer", curManufacturer);
+                req.getRequestDispatcher("/edit/editManufacturer.jsp").forward(req, resp);
             } else if (pathInfo.endsWith("/create")) {
                 req.getRequestDispatcher("/create/addManufacturer.jsp").forward(req, resp);
             }
@@ -63,11 +66,15 @@ public class ManufacturerServletImpl extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         req.setCharacterEncoding("UTF-8");
 
+        String id = req.getParameter("manufacturerId");
+        if (id != null && !id.isEmpty()) {
+            doPut(req, resp);
+        }
+
         try {
             final String name = req.getParameter("manufacturerName");
             final String contactPhone = req.getParameter("contactPhone");
             final String country = req.getParameter("country");
-            System.out.println(country);
 
             manufacturerService.create(Manufacturer.builder()
                     .manufacturerName(name)
@@ -87,23 +94,25 @@ public class ManufacturerServletImpl extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println(111);
         resp.setContentType("text/plain");
         resp.setCharacterEncoding("UTF-8");
+        req.setCharacterEncoding("UTF-8");
 
         try {
-            final Long id = Long.valueOf(req.getParameter("manufacturer_id"));
-            final String name = req.getParameter("name");
-            final String contactPhone = req.getParameter("contact_phone");
+            final Long id = Long.valueOf(req.getParameter("manufacturerId"));
+            final String name = req.getParameter("manufacturerName");
+            final String contactPhone = req.getParameter("contactPhone");
             final String country = req.getParameter("country");
-
-            manufacturerService.update(Manufacturer.builder()
+            final Manufacturer manufacturer = Manufacturer.builder()
                     .manufacturerId(id)
                     .manufacturerName(name)
                     .contactPhone(contactPhone)
                     .country(country)
-                    .build()
-            );
-            resp.getWriter().write("Manufacturer updated successfully");
+                    .build();
+            manufacturerService.update(manufacturer);
+            System.out.println(manufacturer);
+            resp.sendRedirect(req.getContextPath() + "/manufacturer");
 
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
