@@ -33,16 +33,21 @@ public class StorehouseServletImpl extends HttpServlet {
                     System.out.println(e.getMessage());
                 }
 
-            } else if (pathInfo.startsWith("/")) {  // GET /api/storehouse/{id} - получить по ID
-                Long id = Long.parseLong(pathInfo.substring(1));
-                Storehouse storehouseItem = storehouseService.findById(id);
-
-                if (storehouseItem != null) {
-                    resp.getWriter().write(storehouseItem.toString());
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().write("Storehouse item not found");
-                }
+//            } else if (pathInfo.startsWith("/")) {  // GET /api/storehouse/{id} - получить по ID
+//                Long id = Long.parseLong(pathInfo.substring(1));
+//                Storehouse storehouseItem = storehouseService.findById(id);
+//
+//                if (storehouseItem != null) {
+//                    resp.getWriter().write(storehouseItem.toString());
+//                } else {
+//                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+//                    resp.getWriter().write("Storehouse item not found");
+//                }
+//            }
+            } else if (pathInfo.endsWith("/edit")) {
+                doPut(req, resp);
+            } else if (pathInfo.endsWith("/create")) {
+                req.getRequestDispatcher("/create/addStorehouse.jsp").forward(req, resp);
             }
 
         } catch (NumberFormatException e) {
@@ -58,6 +63,7 @@ public class StorehouseServletImpl extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/plain");
         resp.setCharacterEncoding("UTF-8");
+        req.setCharacterEncoding("UTF-8");
 
         try {
             final Long shipmentId = Long.valueOf(req.getParameter("shipment_id"));
@@ -72,7 +78,7 @@ public class StorehouseServletImpl extends HttpServlet {
             );
 
             resp.setStatus(HttpServletResponse.SC_CREATED);
-            resp.getWriter().write("Storehouse item created successfully");
+            resp.sendRedirect(req.getContextPath() + "/storehouse");
 
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

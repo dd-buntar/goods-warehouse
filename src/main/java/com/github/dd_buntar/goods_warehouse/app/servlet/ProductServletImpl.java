@@ -1,10 +1,11 @@
 package com.github.dd_buntar.goods_warehouse.app.servlet;
 
+import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainManufacturerService;
 import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainProductService;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
+import com.github.dd_buntar.goods_warehouse.domain.repositories.dto.ProductWithQuantity;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import lombok.AllArgsConstructor;
 //@WebServlet("api/products/*")
 public class ProductServletImpl extends HttpServlet {
     private DomainProductService productService;
+    private DomainManufacturerService manufacturerService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -27,23 +29,30 @@ public class ProductServletImpl extends HttpServlet {
             if (pathInfo == null || pathInfo.equals("/")) {  // GET /api/products - получить все продукты
 
                 try {
-                    List<Product> products = productService.findAll();
-                    req.setAttribute("product", products);
+                    List<ProductWithQuantity> products = productService.findAllWithQuantity();
+                    req.setAttribute("productWithQuantity", products);
                     req.getRequestDispatcher("/views/products.jsp").forward(req, resp);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
 
-            } else if (pathInfo.startsWith("/")) {  // GET /api/products/{id} - получить по ID
-                Long id = Long.parseLong(pathInfo.substring(1));
-                Product product = productService.findById(id);
-
-                if (product != null) {
-                    resp.getWriter().write(product.toString());
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().write("Product not found");
-                }
+//            } else if (pathInfo.startsWith("/")) {  // GET /api/products/{id} - получить по ID
+//                Long id = Long.parseLong(pathInfo.substring(1));
+//                Product product = productService.findById(id);
+//
+//                if (product != null) {
+//                    resp.getWriter().write(product.toString());
+//                } else {
+//                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+//                    resp.getWriter().write("Product not found");
+//                }
+//            }
+            } else if (pathInfo.endsWith("/edit")) {
+                doPut(req, resp);
+            } else if (pathInfo.endsWith("/create")) {
+                List<Manufacturer> manufacturers = manufacturerService.findAll();
+                req.setAttribute("manufacturers", manufacturers);
+                req.getRequestDispatcher("/create/addProduct.jsp").forward(req, resp);
             }
 
         } catch (NumberFormatException e) {
@@ -59,12 +68,16 @@ public class ProductServletImpl extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/plain");
         resp.setCharacterEncoding("UTF-8");
+        req.setCharacterEncoding("UTF-8");
 
         try {
-            final String name = req.getParameter("name");
-            final Long manufacturerId = Long.parseLong(req.getParameter("manufacturer_id"));
-            final Integer weight = Integer.parseInt(req.getParameter("weight_grams"));
+            final String name = req.getParameter("productName");
+            final Long manufacturerId = Long.parseLong(req.getParameter("manufacturerId"));
+            final Integer weight = Integer.parseInt(req.getParameter("weight"));
             final String description = req.getParameter("description");
+
+            System.out.println(manufacturerId);
+            System.out.println(weight);
 
             productService.create(Product.builder()
                     .productName(name)
@@ -75,7 +88,7 @@ public class ProductServletImpl extends HttpServlet {
             );
 
             resp.setStatus(HttpServletResponse.SC_CREATED);
-            resp.getWriter().write("Product created successfully");
+            resp.sendRedirect(req.getContextPath() + "/product");
 
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

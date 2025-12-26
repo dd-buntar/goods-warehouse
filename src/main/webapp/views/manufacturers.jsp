@@ -10,20 +10,19 @@
 <body>
     <h1>Manufacturer</h1>
 
-
+    <a href="${pageContext.request.contextPath}/manufacturer/create">Add New</a>
     <table>
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Name</th>
                 <th>Phone</th>
                 <th>Country</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <c:forEach var="manufacturer" items="${manufacturer}">
                 <tr>
-                    <td>${manufacturer.manufacturerId}</td>
                     <td>${manufacturer.manufacturerName}</td>
                     <td>${manufacturer.contactPhone}</td>
                     <td>${manufacturer.country}</td>

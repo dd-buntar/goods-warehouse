@@ -3,6 +3,7 @@ package com.github.dd_buntar.goods_warehouse.app.services;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.ProductRepository;
+import com.github.dd_buntar.goods_warehouse.domain.repositories.dto.ProductWithQuantity;
 import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -15,7 +16,9 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     public Product create(@NonNull final Product entity) {
-        validateProduct(entity);
+        validateProductName(entity.getProductName());
+        validateManufacturerId(entity.getManufacturerId());
+        validateWeight(entity.getWeight());
         Optional<Product> curProduct = productRepository.create(entity);
         if (!curProduct.isPresent()) {
             throw new IllegalArgumentException("Запись с id= " + entity.getProductId() + " уже существует");
@@ -33,6 +36,14 @@ public class ProductService {
 
     public List<Product> findAll() {
         List<Product> products = productRepository.findAll();
+        if (products.isEmpty()) {
+            throw new IllegalArgumentException("Таблица пустая");
+        }
+        return products;
+    }
+
+    public List<ProductWithQuantity> findAllWithQuantity() {
+        List<ProductWithQuantity> products = productRepository.findAllWithQuantity();
         if (products.isEmpty()) {
             throw new IllegalArgumentException("Таблица пустая");
         }
@@ -96,12 +107,5 @@ public class ProductService {
         if (weight == null || weight <= 0) {
             throw new IllegalArgumentException("Вес продукта должен быть положительным числом");
         }
-    }
-
-    private void validateProduct(Product product) {
-        validateProductId(product.getProductId());
-        validateProductName(product.getProductName());
-        validateManufacturerId(product.getManufacturerId());
-        validateWeight(product.getWeight());
     }
 }

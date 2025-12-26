@@ -74,22 +74,22 @@ public class WebServer {
     private void addServlets(Context ctx) {
         Tomcat.addServlet(ctx, "manufacturerServlet",
                 new ManufacturerServletImpl(serviceFactory.getDomainManufacturerService()));
-        ctx.addServletMappingDecoded("/manufacturer", "manufacturerServlet");
+        ctx.addServletMappingDecoded("/manufacturer/*", "manufacturerServlet");
 
         Tomcat.addServlet(ctx, "productServlet",
-                new ProductServletImpl(serviceFactory.getDomainProductService()));
-        ctx.addServletMappingDecoded("/product", "productServlet");
+                new ProductServletImpl(serviceFactory.getDomainProductService(), serviceFactory.getDomainManufacturerService()));
+        ctx.addServletMappingDecoded("/product/*", "productServlet");
 
         Tomcat.addServlet(ctx, "shipmentServlet",
-                new ShipmentServletImpl(serviceFactory.getDomainShipmentService()));
-        ctx.addServletMappingDecoded("/shipment", "shipmentServlet");
+                new ShipmentServletImpl(serviceFactory.getDomainShipmentService(), serviceFactory.getDomainProductService()));
+        ctx.addServletMappingDecoded("/shipment/*", "shipmentServlet");
 
         Tomcat.addServlet(ctx, "storageLocationServlet",
                 new StorageLocationServletImpl(serviceFactory.getDomainStorageLocationService()));
-        ctx.addServletMappingDecoded("/storageLocation", "storageLocationServlet");
+        ctx.addServletMappingDecoded("/storageLocation/*", "storageLocationServlet");
 
         Tomcat.addServlet(ctx, "storehouseServlet",
                 new StorehouseServletImpl(serviceFactory.getDomainStorehouseService()));
-        ctx.addServletMappingDecoded("/storehouse", "storehouseServlet");
+        ctx.addServletMappingDecoded("/storehouse/*", "storehouseServlet");
     }
 }

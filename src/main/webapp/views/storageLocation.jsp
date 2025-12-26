@@ -17,6 +17,7 @@
                 <th>ID</th>
                 <th>Rack</th>
                 <th>Shelf</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>

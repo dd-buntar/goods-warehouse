@@ -1,5 +1,6 @@
 package com.github.dd_buntar.goods_warehouse.app.servlet;
 
+import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainProductService;
 import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainShipmentService;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Shipment;
@@ -18,6 +19,7 @@ import lombok.AllArgsConstructor;
 //@WebServlet("api/shipments/*")
 public class ShipmentServletImpl extends HttpServlet {
     private DomainShipmentService shipmentService;
+    private DomainProductService productService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,16 +37,23 @@ public class ShipmentServletImpl extends HttpServlet {
                     System.out.println(e.getMessage());
                 }
 
-            } else if (pathInfo.startsWith("/")) {  // GET /api/shipments/{id} - получить по ID
-                Long id = Long.parseLong(pathInfo.substring(1));
-                Shipment shipment = shipmentService.findById(id);
-
-                if (shipment != null) {
-                    resp.getWriter().write(shipment.toString());
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().write("Shipment not found");
-                }
+//            } else if (pathInfo.startsWith("/")) {  // GET /api/shipments/{id} - получить по ID
+//                Long id = Long.parseLong(pathInfo.substring(1));
+//                Shipment shipment = shipmentService.findById(id);
+//
+//                if (shipment != null) {
+//                    resp.getWriter().write(shipment.toString());
+//                } else {
+//                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+//                    resp.getWriter().write("Shipment not found");
+//                }
+//            }
+            } else if (pathInfo.endsWith("/edit")) {
+                doPut(req, resp);
+            } else if (pathInfo.endsWith("/create")) {
+                List<Product> products = productService.findAll();
+                req.setAttribute("products", products);
+                req.getRequestDispatcher("/create/addShipment.jsp").forward(req, resp);
             }
 
         } catch (NumberFormatException e) {
@@ -60,15 +69,16 @@ public class ShipmentServletImpl extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/plain");
         resp.setCharacterEncoding("UTF-8");
+        req.setCharacterEncoding("UTF-8");
 
         try {
-            String productionDateStr = req.getParameter("production_date");
-            String expiryDateStr = req.getParameter("expiry_date");
-            String arrivalDateStr = req.getParameter("arrival_date");
+            String productionDateStr = req.getParameter("productionDate");
+            String expiryDateStr = req.getParameter("expiryDate");
+            String arrivalDateStr = req.getParameter("arrivalDate");
 
-            final Long productId = Long.valueOf(req.getParameter("product_id"));
-            final Integer purchasePrice = Integer.valueOf(req.getParameter("purchase_price"));
-            final Integer salePrice = Integer.valueOf(req.getParameter("sale_price"));
+            final Long productId = Long.valueOf(req.getParameter("productId"));
+            final Integer purchasePrice = Integer.valueOf(req.getParameter("purchasePrice"));
+            final Integer salePrice = Integer.valueOf(req.getParameter("salePrice"));
 
             // Парсинг дат
             DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -87,7 +97,7 @@ public class ShipmentServletImpl extends HttpServlet {
             );
 
             resp.setStatus(HttpServletResponse.SC_CREATED);
-            resp.getWriter().write("Shipment created successfully");
+            resp.sendRedirect(req.getContextPath() + "/shipment");
 
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

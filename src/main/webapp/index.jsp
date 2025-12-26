@@ -14,7 +14,7 @@
                 <p>Manage product manufacturers</p>
                 <div class="links">
                     <a href="${pageContext.request.contextPath}/manufacturer">View All</a>
-                    <a href="add_manufacturer.jsp">Add New</a>
+                    <a href="${pageContext.request.contextPath}/manufacturer/create">Add New</a>
                 </div>
             </div>
 
@@ -23,7 +23,7 @@
                 <p>Manage products catalog</p>
                 <div class="links">
                     <a href="${pageContext.request.contextPath}/product">View All</a>
-                    <a href="add_product.jsp">Add New</a>
+                    <a href="${pageContext.request.contextPath}/product/create">Add New</a>
                 </div>
             </div>
 
@@ -32,7 +32,7 @@
                 <p>Manage warehouse locations</p>
                 <div class="links">
                     <a href="${pageContext.request.contextPath}/storageLocation">View All</a>
-                    <a href="add_storage_location.jsp">Add New</a>
+                    <a href="${pageContext.request.contextPath}/storageLocation/create">Add New</a>
                 </div>
             </div>
 
@@ -41,7 +41,7 @@
                 <p>Manage product shipments</p>
                 <div class="links">
                     <a href="${pageContext.request.contextPath}/shipment">View All</a>
-                    <a href="add_shipment.jsp">Add New</a>
+                    <a href="${pageContext.request.contextPath}/shipment/create">Add New</a>
                 </div>
             </div>
 
@@ -50,16 +50,7 @@
                 <p>Manage warehouse inventory</p>
                 <div class="links">
                     <a href="${pageContext.request.contextPath}/storehouse">View All</a>
-                    <a href="add_storehouse.jsp">Add New</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>📊 Reports</h3>
-                <p>View system reports</p>
-                <div class="links">
-                    <a href="reports.jsp">Inventory Report</a>
-                    <a href="expiry_report.jsp">Expiry Report</a>
+                    <a href="${pageContext.request.contextPath}/storehouse/create">Add New</a>
                 </div>
             </div>
         </div>

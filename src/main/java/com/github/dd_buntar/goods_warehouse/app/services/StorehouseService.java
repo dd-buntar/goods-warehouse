@@ -88,7 +88,7 @@ public class StorehouseService {
 
     private void validateQuantity(Integer quantity) {
         if (quantity == null || quantity == 0) {
-            throw new IllegalArgumentException("Количество товара не должно быть отрицательным");
+            throw new IllegalArgumentException("Количество товара не должно быть равно 0");
         }
 
     }

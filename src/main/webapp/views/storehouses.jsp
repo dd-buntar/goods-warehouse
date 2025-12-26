@@ -14,16 +14,15 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Shipment</th>
                 <th>Quantity</th>
                 <th>Location</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <c:forEach var="storehouse" items="${storehouse}">
                 <tr>
-                    <td>${storehouse.stockId}</td>
                     <td>${storehouse.shipmentId}</td>
                     <td>${storehouse.quantity}</td>
                     <td>${storehouse.locationId}</td>

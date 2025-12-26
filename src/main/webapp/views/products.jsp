@@ -14,32 +14,33 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Manufacturer</th>
+                <th>Product_name</th>
+                <th>Manufacturer_name</th>
                 <th>Weight</th>
                 <th>Description</th>
+                <th>Quantity</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <c:forEach var="product" items="${product}">
+            <c:forEach var="productWithQuantity" items="${productWithQuantity}">
                 <tr>
-                    <td>${product.productId}</td>
-                    <td>${product.productName}</td>
-                    <td>${product.manufacturerId}</td>
-                    <td>${product.weight}</td>
-                    <td>${product.description}</td>
+                    <td>${productWithQuantity.product.productName}</td>
+                    <td>${productWithQuantity.manufacturerName}</td>
+                    <td>${productWithQuantity.product.weight}</td>
+                    <td>${productWithQuantity.product.description}</td>
+                    <td>${productWithQuantity.quantity}</td>
                     <td class="actions">
-                        <a href="${pageContext.request.contextPath}/product/${product.productId}">View</a>
-                        <a href="${pageContext.request.contextPath}/product/${product.productId}/edit">Edit</a>
-                        <a href="${pageContext.request.contextPath}/product/${product.productId}/delete" onclick="return confirm('Are you sure you want to delete this product?')">Delete</a>
+                        <a href="${pageContext.request.contextPath}/product/${productWithQuantity.product.productId}">View</a>
+                        <a href="${pageContext.request.contextPath}/product/${productWithQuantity.product.productId}/edit">Edit</a>
+                        <a href="${pageContext.request.contextPath}/product/${productWithQuantity.product.productId}/delete" onclick="return confirm('Are you sure you want to delete this product?')">Delete</a>
                     </td>
                 </tr>
             </c:forEach>
         </tbody>
     </table>
 
-    <c:if test="${empty product}">
+    <c:if test="${empty productWithQuantity}">
         <p>No products found.</p>
     </c:if>
 </body>

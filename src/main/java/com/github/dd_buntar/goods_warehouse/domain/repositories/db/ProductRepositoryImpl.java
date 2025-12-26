@@ -3,6 +3,7 @@ package com.github.dd_buntar.goods_warehouse.domain.repositories.db;
 import com.github.dd_buntar.goods_warehouse.db.PostgresSQLManager;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.ProductRepository;
+import com.github.dd_buntar.goods_warehouse.domain.repositories.dto.ProductWithQuantity;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,6 +23,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     private PreparedStatement updateStatement;
     private PreparedStatement findByIdStatement;
     private PreparedStatement findAllStatement;
+    private PreparedStatement findAllWithQuantityStatement;
     private PreparedStatement findByNameStatement;
     private PreparedStatement findByManufacturerIdStatement;
 
@@ -35,11 +37,40 @@ public class ProductRepositoryImpl implements ProductRepository {
             );
 
             this.findByIdStatement = connection.prepareStatement(
-                    "SELECT * FROM products " +
+                    "SELECT " +
+                            "p.product_id, " +
+                            "p.name AS product_name, " +
+                            "p.manufacturer_id, " +
+                            "p.weight_grams, " +
+                            "p.description " +
+                            "FROM products p " +
                             "WHERE product_id = ?");
 
             this.findAllStatement = connection.prepareStatement(
-                    "SELECT * FROM products"
+                    "SELECT " +
+                            "p.product_id, " +
+                            "p.name AS product_name, " +
+                            "p.manufacturer_id, " +
+                            "p.weight_grams, " +
+                            "p.description " +
+                            "FROM products p "
+            );
+
+            this.findAllWithQuantityStatement = connection.prepareStatement(
+                    "SELECT " +
+                            "p.product_id, " +
+                            "p.name AS product_name, " +
+                            "p.manufacturer_id, " +
+                            "m.name AS manufacturer_name, " +
+                            "p.weight_grams, " +
+                            "p.description, " +
+                            "COALESCE(SUM(s.quantity), 0) AS total_quantity " +
+                            "FROM products p " +
+                            "LEFT JOIN shipments sh ON p.product_id = sh.product_id " +
+                            "LEFT JOIN storehouse s ON sh.shipment_id = s.shipment_id " +
+                            "LEFT JOIN manufacturers m ON p.manufacturer_id = m.manufacturer_id " +
+                            "GROUP BY p.product_id, m.name " +
+                            "ORDER BY p.product_id"
             );
 
             this.deleteByIdStatement = connection.prepareStatement(
@@ -54,12 +85,24 @@ public class ProductRepositoryImpl implements ProductRepository {
             );
 
             this.findByNameStatement = connection.prepareStatement(
-                    "SELECT * FROM products " +
+                    "SELECT " +
+                            "p.product_id, " +
+                            "p.name AS product_name, " +
+                            "p.manufacturer_id, " +
+                            "p.weight_grams, " +
+                            "p.description " +
+                            "FROM products p " +
                             "WHERE name = ?"
             );
 
             this.findByManufacturerIdStatement = connection.prepareStatement(
-                    "SELECT * FROM products " +
+                    "SELECT " +
+                            "p.product_id, " +
+                            "p.name AS product_name, " +
+                            "p.manufacturer_id, " +
+                            "p.weight_grams, " +
+                            "p.description " +
+                            "FROM products p " +
                             "WHERE manufacturer_id = ?"
             );
 
@@ -124,6 +167,15 @@ public class ProductRepositoryImpl implements ProductRepository {
     public List<Product> findAll() {
         try (ResultSet result = findAllStatement.executeQuery()) {
             return extractProductList(result);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get all products", e);
+        }
+    }
+
+    @Override
+    public List<ProductWithQuantity> findAllWithQuantity() {
+        try (ResultSet result = findAllWithQuantityStatement.executeQuery()) {
+            return extractProductWithQuantityList(result);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to get all products", e);
         }
@@ -200,10 +252,28 @@ public class ProductRepositoryImpl implements ProductRepository {
     private Product extractProduct(ResultSet result) throws SQLException {
         return Product.builder()
                 .productId(result.getLong("product_id"))
-                .productName(result.getString("name"))
+                .productName(result.getString("product_name"))
                 .manufacturerId(result.getLong("manufacturer_id"))
                 .weight(result.getInt("weight_grams"))
                 .description(result.getString("description"))
+                .build();
+    }
+
+    private List<ProductWithQuantity> extractProductWithQuantityList (ResultSet result)
+            throws SQLException {
+        List<ProductWithQuantity> products = new ArrayList<>();
+        while (result.next()) {
+            products.add(extractProductWithQuantity(result));
+        }
+        return products;
+    }
+
+    private ProductWithQuantity extractProductWithQuantity(ResultSet result)
+            throws SQLException {
+        return ProductWithQuantity.builder()
+                .product(extractProduct(result))
+                .manufacturerName(result.getString("manufacturer_name"))
+                .quantity(result.getInt("total_quantity"))
                 .build();
     }
 }

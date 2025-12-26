@@ -3,7 +3,6 @@ package com.github.dd_buntar.goods_warehouse.app.servlet;
 import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainManufacturerService;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Manufacturer;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,22 +25,27 @@ public class ManufacturerServletImpl extends HttpServlet {
             if (pathInfo == null || pathInfo.equals("/")) {  // GET /api/books - получить всех
                 try {
                     List<Manufacturer> manufacturers = manufacturerService.findAll();
-                        req.setAttribute("manufacturer", manufacturers);
-                        req.getRequestDispatcher("/views/manufacturers.jsp").forward(req, resp);
+                    req.setAttribute("manufacturer", manufacturers);
+                    req.getRequestDispatcher("/views/manufacturers.jsp").forward(req, resp);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
 
-            } else if (pathInfo.startsWith("/")) {  // GET /api/books/{id} - получить по ID
-                Long id = Long.parseLong(pathInfo.substring(1));
-                Manufacturer manufacturer = manufacturerService.findById(id);
+//            } else if (pathInfo.equals("/")) {  // GET /api/books/{id} - получить по ID
+//                Long id = Long.parseLong(pathInfo.substring(1));
+//                Manufacturer manufacturer = manufacturerService.findById(id);
+//
+//                if (manufacturer != null) {
+//                    resp.getWriter().write(manufacturer.toString());
+//                } else {
+//                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+//                    resp.getWriter().write("Manufacturer not found");
+//                }
 
-                if (manufacturer != null) {
-                    resp.getWriter().write(manufacturer.toString());
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().write("Manufacturer not found");
-                }
+            } else if (pathInfo.endsWith("/edit")) {
+                doPut(req, resp);
+            } else if (pathInfo.endsWith("/create")) {
+                req.getRequestDispatcher("/create/addManufacturer.jsp").forward(req, resp);
             }
 
         } catch (NumberFormatException e) {
@@ -57,11 +61,13 @@ public class ManufacturerServletImpl extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/plain");
         resp.setCharacterEncoding("UTF-8");
+        req.setCharacterEncoding("UTF-8");
 
         try {
-            final String name = req.getParameter("name");
-            final String contactPhone = req.getParameter("contact_phone");
+            final String name = req.getParameter("manufacturerName");
+            final String contactPhone = req.getParameter("contactPhone");
             final String country = req.getParameter("country");
+            System.out.println(country);
 
             manufacturerService.create(Manufacturer.builder()
                     .manufacturerName(name)
@@ -71,7 +77,7 @@ public class ManufacturerServletImpl extends HttpServlet {
             );
 
             resp.setStatus(HttpServletResponse.SC_CREATED);
-            resp.getWriter().write("Manufacturer created successfully");
+            resp.sendRedirect(req.getContextPath() + "/manufacturer");
 
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

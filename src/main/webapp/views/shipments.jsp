@@ -21,6 +21,7 @@
                 <th>Production_Date</th>
                 <th>Expiry_Date</th>
                 <th>Arrival_Date</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>

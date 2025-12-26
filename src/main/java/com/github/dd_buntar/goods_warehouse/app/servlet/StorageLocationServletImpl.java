@@ -33,16 +33,21 @@ public class StorageLocationServletImpl extends HttpServlet {
                     System.out.println(e.getMessage());
                 }
 
-            } else if (pathInfo.startsWith("/")) {  // GET /api/storage-locations/{id} - получить по ID
-                Long id = Long.parseLong(pathInfo.substring(1));
-                StorageLocation location = storageLocationService.findById(id);
-
-                if (location != null) {
-                    resp.getWriter().write(location.toString());
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().write("Storage location not found");
-                }
+//            } else if (pathInfo.startsWith("/")) {  // GET /api/storage-locations/{id} - получить по ID
+//                Long id = Long.parseLong(pathInfo.substring(1));
+//                StorageLocation location = storageLocationService.findById(id);
+//
+//                if (location != null) {
+//                    resp.getWriter().write(location.toString());
+//                } else {
+//                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+//                    resp.getWriter().write("Storage location not found");
+//                }
+//            }
+            } else if (pathInfo.endsWith("/edit")) {
+                doPut(req, resp);
+            } else if (pathInfo.endsWith("/create")) {
+                req.getRequestDispatcher("/create/addLocation.jsp").forward(req, resp);
             }
 
         } catch (NumberFormatException e) {
@@ -58,6 +63,7 @@ public class StorageLocationServletImpl extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/plain");
         resp.setCharacterEncoding("UTF-8");
+        req.setCharacterEncoding("UTF-8");
 
         try {
             final Integer rackNum = Integer.valueOf(req.getParameter("rack_num"));
@@ -70,7 +76,7 @@ public class StorageLocationServletImpl extends HttpServlet {
             );
 
             resp.setStatus(HttpServletResponse.SC_CREATED);
-            resp.getWriter().write("Storage location created successfully");
+            resp.sendRedirect(req.getContextPath() + "/storageLocation");
 
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
