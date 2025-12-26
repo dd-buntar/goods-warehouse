@@ -29,7 +29,8 @@
                     <td class="actions">
                         <a href="${pageContext.request.contextPath}/manufacturer/${manufacturer.manufacturerId}">View</a>
                         <a href="${pageContext.request.contextPath}/manufacturer/${manufacturer.manufacturerId}/edit">Edit</a>
-                        <a href="${pageContext.request.contextPath}/manufacturer/${manufacturer.manufacturerId}/delete" onclick="return confirm('Are you sure you want to delete this manufacturer?')">Delete</a>
+                        <button onclick="delFrom('${manufacturer.manufacturerId}', 'manufacturer')" >Delete</button>
+
                     </td>
                 </tr>
             </c:forEach>
@@ -39,5 +40,6 @@
     <c:if test="${empty manufacturer}">
         <p>No manufacturers found.</p>
     </c:if>
+    <script src="${pageContext.request.contextPath}/js/scripts.js"></script>
 </body>
 </html>

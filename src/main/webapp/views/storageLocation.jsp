@@ -29,7 +29,7 @@
                     <td class="actions">
                         <a href="${pageContext.request.contextPath}/storageLocation/${storageLocation.locationId}">View</a>
                         <a href="${pageContext.request.contextPath}/storageLocation/${storageLocation.locationId}/edit">Edit</a>
-                        <a href="${pageContext.request.contextPath}/storageLocation/${storageLocation.locationId}/delete" onclick="return confirm('Are you sure you want to delete this location?')">Delete</a>
+                        <button onclick="delFrom('${storageLocation.locationId}', 'storageLocation')" >Delete</button>
                     </td>
                 </tr>
             </c:forEach>
@@ -39,5 +39,6 @@
     <c:if test="${empty storageLocation}">
         <p>No locations found.</p>
     </c:if>
+    <script src="${pageContext.request.contextPath}/js/scripts.js"></script>
 </body>
 </html>

@@ -29,7 +29,7 @@
                     <td class="actions">
                         <a href="${pageContext.request.contextPath}/storehouse/${storehouse.stockId}">View</a>
                         <a href="${pageContext.request.contextPath}/storehouse/${storehouse.stockId}/edit">Edit</a>
-                        <a href="${pageContext.request.contextPath}/storehouse/${storehouse.stockId}/delete" onclick="return confirm('Are you sure you want to delete this storehouse?')">Delete</a>
+                        <button onclick="delFrom('${storehouse.stockId}', 'storehouse')" >Delete</button>
                     </td>
                 </tr>
             </c:forEach>
@@ -39,5 +39,6 @@
     <c:if test="${empty storehouse}">
         <p>No storehouses found.</p>
     </c:if>
+    <script src="${pageContext.request.contextPath}/js/scripts.js"></script>
 </body>
 </html>

@@ -33,7 +33,7 @@
                     <td class="actions">
                         <a href="${pageContext.request.contextPath}/product/${productWithQuantity.product.productId}">View</a>
                         <a href="${pageContext.request.contextPath}/product/${productWithQuantity.product.productId}/edit">Edit</a>
-                        <a href="${pageContext.request.contextPath}/product/${productWithQuantity.product.productId}/delete" onclick="return confirm('Are you sure you want to delete this product?')">Delete</a>
+                        <button onclick="delFrom('${productWithQuantity.product.productId}', 'product')" >Delete</button>
                     </td>
                 </tr>
             </c:forEach>
@@ -43,5 +43,6 @@
     <c:if test="${empty productWithQuantity}">
         <p>No products found.</p>
     </c:if>
+    <script src="${pageContext.request.contextPath}/js/scripts.js"></script>
 </body>
 </html>
