@@ -1,6 +1,9 @@
 package com.github.dd_buntar.goods_warehouse.app.servlet;
 
+import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainShipmentService;
+import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainStorageLocationService;
 import com.github.dd_buntar.goods_warehouse.app.services.domain.DomainStorehouseService;
+import com.github.dd_buntar.goods_warehouse.domain.entities.Shipment;
 import com.github.dd_buntar.goods_warehouse.domain.entities.StorageLocation;
 import com.github.dd_buntar.goods_warehouse.domain.entities.Storehouse;
 import jakarta.servlet.ServletException;
@@ -16,6 +19,8 @@ import lombok.AllArgsConstructor;
 //@WebServlet("api/storehouse/*")
 public class StorehouseServletImpl extends HttpServlet {
     private DomainStorehouseService storehouseService;
+    private DomainShipmentService shipmentService;
+    private DomainStorageLocationService storageLocationService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,6 +52,12 @@ public class StorehouseServletImpl extends HttpServlet {
             } else if (pathInfo.endsWith("/edit")) {
                 doPut(req, resp);
             } else if (pathInfo.endsWith("/create")) {
+                List<Shipment> shipments = shipmentService.findAll();
+                req.setAttribute("shipments", shipments);
+
+                List<StorageLocation> locations = storageLocationService.findAll();
+                req.setAttribute("locations", locations);
+
                 req.getRequestDispatcher("/create/addStorehouse.jsp").forward(req, resp);
             }
 
@@ -66,9 +77,9 @@ public class StorehouseServletImpl extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         try {
-            final Long shipmentId = Long.valueOf(req.getParameter("shipment_id"));
+            final Long shipmentId = Long.valueOf(req.getParameter("shipmentId"));
             final Integer quantity = Integer.valueOf(req.getParameter("quantity"));
-            final Long locationId = Long.valueOf(req.getParameter("location_id"));
+            final Long locationId = Long.valueOf(req.getParameter("locationId"));
 
             storehouseService.create(Storehouse.builder()
                     .shipmentId(shipmentId)
