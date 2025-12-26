@@ -10,6 +10,7 @@
     <h1>Edit Manufacturer</h1>
         <form action="${pageContext.request.contextPath}/manufacturer" accepted-charset='utf-8' method="post">
             Manufacturer ID: ${curManufacturer.manufacturerId}
+            <input type="hidden" name="manufacturerId" value="${curManufacturer.manufacturerId}">
             <div class="form-group">
                 <label for="manufacturerName">Manufacturer Name:</label>
                 <input type="text" id="manufacturerName" name="manufacturerName"

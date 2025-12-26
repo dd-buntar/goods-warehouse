@@ -36,19 +36,16 @@ public class ProductServletImpl extends HttpServlet {
                     System.out.println(e.getMessage());
                 }
 
-//            } else if (pathInfo.startsWith("/")) {  // GET /api/products/{id} - получить по ID
-//                Long id = Long.parseLong(pathInfo.substring(1));
-//                Product product = productService.findById(id);
-//
-//                if (product != null) {
-//                    resp.getWriter().write(product.toString());
-//                } else {
-//                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-//                    resp.getWriter().write("Product not found");
-//                }
-//            }
             } else if (pathInfo.endsWith("/edit")) {
-                doPut(req, resp);
+                Long id = Long.parseLong(pathInfo.substring(1, pathInfo.length() - "/edit".length()));
+                Product curProduct = productService.findById(id);
+                req.setAttribute("curProduct", curProduct);
+
+                List<Manufacturer> manufacturers = manufacturerService.findAll();
+                req.setAttribute("manufacturers", manufacturers);
+
+                req.getRequestDispatcher("/edit/editProduct.jsp").forward(req, resp);
+
             } else if (pathInfo.endsWith("/create")) {
                 List<Manufacturer> manufacturers = manufacturerService.findAll();
                 req.setAttribute("manufacturers", manufacturers);
@@ -70,32 +67,39 @@ public class ProductServletImpl extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         req.setCharacterEncoding("UTF-8");
 
-        try {
-            final String name = req.getParameter("productName");
-            final Long manufacturerId = Long.parseLong(req.getParameter("manufacturerId"));
-            final Integer weight = Integer.parseInt(req.getParameter("weight"));
-            final String description = req.getParameter("description");
+        String id = req.getParameter("productId");
+        System.out.println(id);
+        if (id != null && !id.isEmpty()) {
+            doPut(req, resp);
+        } else {
 
-            System.out.println(manufacturerId);
-            System.out.println(weight);
+            try {
+                final String name = req.getParameter("productName");
+                final Long manufacturerId = Long.parseLong(req.getParameter("manufacturerId"));
+                final Integer weight = Integer.parseInt(req.getParameter("weight"));
+                final String description = req.getParameter("description");
 
-            productService.create(Product.builder()
-                    .productName(name)
-                    .manufacturerId(manufacturerId)
-                    .weight(weight)
-                    .description(description)
-                    .build()
-            );
+                System.out.println(manufacturerId);
+                System.out.println(weight);
 
-            resp.setStatus(HttpServletResponse.SC_CREATED);
-            resp.sendRedirect(req.getContextPath() + "/product");
+                productService.create(Product.builder()
+                        .productName(name)
+                        .manufacturerId(manufacturerId)
+                        .weight(weight)
+                        .description(description)
+                        .build()
+                );
 
-        } catch (NumberFormatException e) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().write("Invalid number format for manufacturer_id or weight_grams");
-        } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.getWriter().write("Error creating product: " + e.getMessage());
+                resp.setStatus(HttpServletResponse.SC_CREATED);
+                resp.sendRedirect(req.getContextPath() + "/product");
+
+            } catch (NumberFormatException e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write("Invalid number format for manufacturer_id or weight_grams");
+            } catch (Exception e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                resp.getWriter().write("Error creating product: " + e.getMessage());
+            }
         }
     }
 
@@ -105,10 +109,10 @@ public class ProductServletImpl extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
 
         try {
-            final Long id = Long.valueOf(req.getParameter("product_id"));
-            final String name = req.getParameter("name");
-            final Long manufacturerId = Long.parseLong(req.getParameter("manufacturer_id"));
-            final Integer weight = Integer.parseInt(req.getParameter("weight_grams"));
+            final Long id = Long.valueOf(req.getParameter("productId"));
+            final String name = req.getParameter("productName");
+            final Long manufacturerId = Long.parseLong(req.getParameter("manufacturerId"));
+            final Integer weight = Integer.parseInt(req.getParameter("weight"));
             final String description = req.getParameter("description");
 
             productService.update(Product.builder()
@@ -119,7 +123,7 @@ public class ProductServletImpl extends HttpServlet {
                     .description(description)
                     .build()
             );
-            resp.getWriter().write("Product updated successfully");
+            resp.sendRedirect(req.getContextPath() + "/product");
 
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

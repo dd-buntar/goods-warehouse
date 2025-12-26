@@ -31,22 +31,12 @@ public class ManufacturerServletImpl extends HttpServlet {
                     System.out.println(e.getMessage());
                 }
 
-//            } else if (pathInfo.equals("/")) {  // GET /api/books/{id} - получить по ID
-//                Long id = Long.parseLong(pathInfo.substring(1));
-//                Manufacturer manufacturer = manufacturerService.findById(id);
-//
-//                if (manufacturer != null) {
-//                    resp.getWriter().write(manufacturer.toString());
-//                } else {
-//                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-//                    resp.getWriter().write("Manufacturer not found");
-//                }
-
             } else if (pathInfo.endsWith("/edit")) {
                 Long id = Long.parseLong(pathInfo.substring(1, pathInfo.length() - "/edit".length()));
                 Manufacturer curManufacturer = manufacturerService.findById(id);
                 req.setAttribute("curManufacturer", curManufacturer);
                 req.getRequestDispatcher("/edit/editManufacturer.jsp").forward(req, resp);
+
             } else if (pathInfo.endsWith("/create")) {
                 req.getRequestDispatcher("/create/addManufacturer.jsp").forward(req, resp);
             }
@@ -69,32 +59,32 @@ public class ManufacturerServletImpl extends HttpServlet {
         String id = req.getParameter("manufacturerId");
         if (id != null && !id.isEmpty()) {
             doPut(req, resp);
-        }
+        } else {
 
-        try {
-            final String name = req.getParameter("manufacturerName");
-            final String contactPhone = req.getParameter("contactPhone");
-            final String country = req.getParameter("country");
+            try {
+                final String name = req.getParameter("manufacturerName");
+                final String contactPhone = req.getParameter("contactPhone");
+                final String country = req.getParameter("country");
 
-            manufacturerService.create(Manufacturer.builder()
-                    .manufacturerName(name)
-                    .contactPhone(contactPhone)
-                    .country(country)
-                    .build()
-            );
+                manufacturerService.create(Manufacturer.builder()
+                        .manufacturerName(name)
+                        .contactPhone(contactPhone)
+                        .country(country)
+                        .build()
+                );
 
-            resp.setStatus(HttpServletResponse.SC_CREATED);
-            resp.sendRedirect(req.getContextPath() + "/manufacturer");
+                resp.setStatus(HttpServletResponse.SC_CREATED);
+                resp.sendRedirect(req.getContextPath() + "/manufacturer");
 
-        } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.getWriter().write("Error creating manufacturer: " + e.getMessage());
+            } catch (Exception e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                resp.getWriter().write("Error creating manufacturer: " + e.getMessage());
+            }
         }
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println(111);
         resp.setContentType("text/plain");
         resp.setCharacterEncoding("UTF-8");
         req.setCharacterEncoding("UTF-8");
@@ -104,6 +94,7 @@ public class ManufacturerServletImpl extends HttpServlet {
             final String name = req.getParameter("manufacturerName");
             final String contactPhone = req.getParameter("contactPhone");
             final String country = req.getParameter("country");
+
             final Manufacturer manufacturer = Manufacturer.builder()
                     .manufacturerId(id)
                     .manufacturerName(name)
@@ -111,7 +102,7 @@ public class ManufacturerServletImpl extends HttpServlet {
                     .country(country)
                     .build();
             manufacturerService.update(manufacturer);
-            System.out.println(manufacturer);
+
             resp.sendRedirect(req.getContextPath() + "/manufacturer");
 
         } catch (NumberFormatException e) {
