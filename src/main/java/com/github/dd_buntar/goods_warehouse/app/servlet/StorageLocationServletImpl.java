@@ -33,19 +33,13 @@ public class StorageLocationServletImpl extends HttpServlet {
                     System.out.println(e.getMessage());
                 }
 
-//            } else if (pathInfo.startsWith("/")) {  // GET /api/storage-locations/{id} - получить по ID
-//                Long id = Long.parseLong(pathInfo.substring(1));
-//                StorageLocation location = storageLocationService.findById(id);
-//
-//                if (location != null) {
-//                    resp.getWriter().write(location.toString());
-//                } else {
-//                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-//                    resp.getWriter().write("Storage location not found");
-//                }
-//            }
             } else if (pathInfo.endsWith("/edit")) {
-                doPut(req, resp);
+                Long id = Long.parseLong(pathInfo.substring(1, pathInfo.length() - "/edit".length()));
+                StorageLocation curLocation = storageLocationService.findById(id);
+                req.setAttribute("curLocation", curLocation);
+
+                req.getRequestDispatcher("/edit/editLocation.jsp").forward(req, resp);
+
             } else if (pathInfo.endsWith("/create")) {
                 req.getRequestDispatcher("/create/addLocation.jsp").forward(req, resp);
             }
@@ -65,25 +59,32 @@ public class StorageLocationServletImpl extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         req.setCharacterEncoding("UTF-8");
 
-        try {
-            final Integer rackNum = Integer.valueOf(req.getParameter("rackNum"));
-            final Integer shelfNum = Integer.valueOf(req.getParameter("shelfNum"));
+        String id = req.getParameter("productId");
+        System.out.println(id);
+        if (id != null && !id.isEmpty()) {
+            doPut(req, resp);
+        } else {
 
-            storageLocationService.create(StorageLocation.builder()
-                    .rackNum(rackNum)
-                    .shelfNum(shelfNum)
-                    .build()
-            );
+            try {
+                final Integer rackNum = Integer.valueOf(req.getParameter("rackNum"));
+                final Integer shelfNum = Integer.valueOf(req.getParameter("shelfNum"));
 
-            resp.setStatus(HttpServletResponse.SC_CREATED);
-            resp.sendRedirect(req.getContextPath() + "/storageLocation");
+                storageLocationService.create(StorageLocation.builder()
+                        .rackNum(rackNum)
+                        .shelfNum(shelfNum)
+                        .build()
+                );
 
-        } catch (NumberFormatException e) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().write("Invalid number format for rack_num or shelf_num");
-        } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.getWriter().write("Error creating storage location: " + e.getMessage());
+                resp.setStatus(HttpServletResponse.SC_CREATED);
+                resp.sendRedirect(req.getContextPath() + "/storageLocation");
+
+            } catch (NumberFormatException e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write("Invalid number format for rack_num or shelf_num");
+            } catch (Exception e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                resp.getWriter().write("Error creating storage location: " + e.getMessage());
+            }
         }
     }
 
@@ -93,9 +94,9 @@ public class StorageLocationServletImpl extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
 
         try {
-            final Long id = Long.valueOf(req.getParameter("location_id"));
-            final Integer rackNum = Integer.valueOf(req.getParameter("rack_num"));
-            final Integer shelfNum = Integer.valueOf(req.getParameter("shelf_num"));
+            final Long id = Long.valueOf(req.getParameter("locationId"));
+            final Integer rackNum = Integer.valueOf(req.getParameter("rackNum"));
+            final Integer shelfNum = Integer.valueOf(req.getParameter("shelfNum"));
 
             storageLocationService.update(StorageLocation.builder()
                     .locationId(id)
@@ -103,7 +104,7 @@ public class StorageLocationServletImpl extends HttpServlet {
                     .shelfNum(shelfNum)
                     .build()
             );
-            resp.getWriter().write("Storage location updated successfully");
+            resp.sendRedirect(req.getContextPath() + "/storageLocation");
 
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

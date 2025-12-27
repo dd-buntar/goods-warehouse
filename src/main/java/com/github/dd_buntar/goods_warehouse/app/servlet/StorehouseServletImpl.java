@@ -38,19 +38,19 @@ public class StorehouseServletImpl extends HttpServlet {
                     System.out.println(e.getMessage());
                 }
 
-//            } else if (pathInfo.startsWith("/")) {  // GET /api/storehouse/{id} - получить по ID
-//                Long id = Long.parseLong(pathInfo.substring(1));
-//                Storehouse storehouseItem = storehouseService.findById(id);
-//
-//                if (storehouseItem != null) {
-//                    resp.getWriter().write(storehouseItem.toString());
-//                } else {
-//                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-//                    resp.getWriter().write("Storehouse item not found");
-//                }
-//            }
             } else if (pathInfo.endsWith("/edit")) {
-                doPut(req, resp);
+                Long id = Long.parseLong(pathInfo.substring(1, pathInfo.length() - "/edit".length()));
+                Storehouse curStorehouse = storehouseService.findById(id);
+                req.setAttribute("curStorehouse", curStorehouse);
+
+                List<Shipment> shipments = shipmentService.findAll();
+                req.setAttribute("shipments", shipments);
+
+                List<StorageLocation> locations = storageLocationService.findAll();
+                req.setAttribute("locations", locations);
+
+                req.getRequestDispatcher("/edit/editStorehouse.jsp").forward(req, resp);
+
             } else if (pathInfo.endsWith("/create")) {
                 List<Shipment> shipments = shipmentService.findAll();
                 req.setAttribute("shipments", shipments);
@@ -76,27 +76,33 @@ public class StorehouseServletImpl extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         req.setCharacterEncoding("UTF-8");
 
-        try {
-            final Long shipmentId = Long.valueOf(req.getParameter("shipmentId"));
-            final Integer quantity = Integer.valueOf(req.getParameter("quantity"));
-            final Long locationId = Long.valueOf(req.getParameter("locationId"));
+        String id = req.getParameter("stockId");
+        System.out.println(id);
+        if (id != null && !id.isEmpty()) {
+            doPut(req, resp);
+        } else {
+            try {
+                final Long shipmentId = Long.valueOf(req.getParameter("shipmentId"));
+                final Integer quantity = Integer.valueOf(req.getParameter("quantity"));
+                final Long locationId = Long.valueOf(req.getParameter("locationId"));
 
-            storehouseService.create(Storehouse.builder()
-                    .shipmentId(shipmentId)
-                    .quantity(quantity)
-                    .locationId(locationId)
-                    .build()
-            );
+                storehouseService.create(Storehouse.builder()
+                        .shipmentId(shipmentId)
+                        .quantity(quantity)
+                        .locationId(locationId)
+                        .build()
+                );
 
-            resp.setStatus(HttpServletResponse.SC_CREATED);
-            resp.sendRedirect(req.getContextPath() + "/storehouse");
+                resp.setStatus(HttpServletResponse.SC_CREATED);
+                resp.sendRedirect(req.getContextPath() + "/storehouse");
 
-        } catch (NumberFormatException e) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().write("Invalid number format for shipment_id, quantity or location_id");
-        } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.getWriter().write("Error creating storehouse item: " + e.getMessage());
+            } catch (NumberFormatException e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write("Invalid number format for shipment_id, quantity or location_id");
+            } catch (Exception e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                resp.getWriter().write("Error creating storehouse item: " + e.getMessage());
+            }
         }
     }
 
@@ -106,10 +112,10 @@ public class StorehouseServletImpl extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
 
         try {
-            final Long id = Long.valueOf(req.getParameter("stock_id"));
-            final Long shipmentId = Long.valueOf(req.getParameter("shipment_id"));
+            final Long id = Long.valueOf(req.getParameter("stockId"));
+            final Long shipmentId = Long.valueOf(req.getParameter("shipmentId"));
             final Integer quantity = Integer.valueOf(req.getParameter("quantity"));
-            final Long locationId = Long.valueOf(req.getParameter("location_id"));
+            final Long locationId = Long.valueOf(req.getParameter("locationId"));
 
             storehouseService.update(Storehouse.builder()
                     .stockId(id)
@@ -118,7 +124,7 @@ public class StorehouseServletImpl extends HttpServlet {
                     .locationId(locationId)
                     .build()
             );
-            resp.getWriter().write("Storehouse item updated successfully");
+            resp.sendRedirect(req.getContextPath() + "/storehouse");
 
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
