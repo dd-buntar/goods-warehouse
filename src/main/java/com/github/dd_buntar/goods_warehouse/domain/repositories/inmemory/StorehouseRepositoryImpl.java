@@ -41,6 +41,19 @@ public class StorehouseRepositoryImpl implements StorehouseRepository {
     }
 
     @Override
+    public List<Storehouse> findAll(int limit, int offset) {
+        return storehouseStorage.values().stream()
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public long countAll() {
+        return storehouseStorage.size();
+    }
+
+    @Override
     public Optional<Storehouse> update(Storehouse entity) {
         if (storehouseStorage.containsKey(entity.getStockId())) {
             Long id = entity.getStockId();

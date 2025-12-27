@@ -74,6 +74,21 @@ public class StorehouseService {
         return storehouses;
     }
 
+    public List<Storehouse> findAll(int page, int size) {
+        validatePage(page);
+        validateSize(size);
+        int offset = (page - 1) * size;
+        return storehouseRepository.findAll(size, offset);
+    }
+
+    public long getTotalCount() {
+        return storehouseRepository.countAll();
+    }
+
+    public int getTotalPages(long totalCount, int size) {
+        return (int) Math.ceil((double) totalCount / size);
+    }
+
     private void validateStockId(Long stockId) {
         if (stockId == null || stockId <= 0) {
             throw new IllegalArgumentException("Id поставки на складе должен быть положительным числом");
@@ -104,5 +119,17 @@ public class StorehouseService {
         validateShipmentId(storehouse.getShipmentId());
         validateLocationId(storehouse.getLocationId());
         validateQuantity(storehouse.getQuantity());
+    }
+
+    private void validatePage(int page) {
+        if (page < 1) {
+            throw new IllegalArgumentException("Page number must be greater than 0");
+        }
+    }
+
+    private void validateSize(int size) {
+        if (size < 1 || size > 100) {
+            throw new IllegalArgumentException("Page size must be between 1 and 100");
+        }
     }
 }
