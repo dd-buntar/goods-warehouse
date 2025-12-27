@@ -2,8 +2,12 @@ package com.github.dd_buntar.goods_warehouse.domain.repositories.inmemory;
 
 import com.github.dd_buntar.goods_warehouse.domain.entities.Product;
 import com.github.dd_buntar.goods_warehouse.domain.repositories.ProductRepository;
-
-import java.util.*;
+import com.github.dd_buntar.goods_warehouse.domain.repositories.dto.ProductWithQuantity;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -39,6 +43,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public List<Product> findAll() {
         return new ArrayList<>(productStorage.values());
+    }
+
+    @Override
+    public List<ProductWithQuantity> findAllWithQuantity() {
+        return null;
     }
 
     @Override

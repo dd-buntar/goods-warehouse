@@ -6,6 +6,7 @@ import com.github.dd_buntar.goods_warehouse.domain.entities.Shipment;
 import com.github.dd_buntar.goods_warehouse.app.services.ManufacturerService;
 import com.github.dd_buntar.goods_warehouse.app.services.ProductService;
 
+import com.github.dd_buntar.goods_warehouse.domain.repositories.dto.ProductWithQuantity;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,10 @@ public class DomainProductService {
 
     public List<Product> findAll() {
         return productService.findAll();
+    }
+
+    public List<ProductWithQuantity> findAllWithQuantity() {
+        return productService.findAllWithQuantity();
     }
 
     public Product update(final Product entity) {
