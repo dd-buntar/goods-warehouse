@@ -45,6 +45,18 @@ public class DomainStorehouseService {
         return storehouseService.findByShipmentId(shipmentId);
     }
 
+    public List<Storehouse> findAll(int page, int size) {
+        return storehouseService.findAll(page, size);
+    }
+
+    public long getTotalCount() {
+        return storehouseService.getTotalCount();
+    }
+
+    public int getTotalPages(long totalCount, int size) {
+        return storehouseService.getTotalPages(totalCount, size);
+    }
+
     private void validateStorehouseRelation(Storehouse entity,
                                             ShipmentService shipmentService,
                                             StorageLocationService storageLocationService) {

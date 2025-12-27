@@ -22,6 +22,8 @@ public class StorehouseRepositoryImpl implements StorehouseRepository {
     private PreparedStatement updateStatement;
     private PreparedStatement findByIdStatement;
     private PreparedStatement findAllStatement;
+    private PreparedStatement findAllPaginatedStatement;
+    private PreparedStatement countAllStatement;
     private PreparedStatement findByLocationIdStatement;
     private PreparedStatement findByShipmentIdStatement;
 
@@ -61,6 +63,14 @@ public class StorehouseRepositoryImpl implements StorehouseRepository {
             this.findByShipmentIdStatement = connection.prepareStatement(
                     "SELECT * FROM storehouse " +
                             "WHERE shipment_id = ?"
+            );
+
+            this.findAllPaginatedStatement = connection.prepareStatement(
+                    "SELECT * FROM storehouse ORDER BY stock_id LIMIT ? OFFSET ?"
+            );
+
+            this.countAllStatement = connection.prepareStatement(
+                    "SELECT COUNT(*) FROM storehouse"
             );
 
         } catch (SQLException e) {
@@ -196,5 +206,30 @@ public class StorehouseRepositoryImpl implements StorehouseRepository {
                 .quantity(result.getInt("quantity"))
                 .locationId(result.getLong("location_id"))
                 .build();
+    }
+
+    @Override
+    public List<Storehouse> findAll(int limit, int offset) {
+        try {
+            findAllPaginatedStatement.setInt(1, limit);
+            findAllPaginatedStatement.setInt(2, offset);
+            try (ResultSet result = findAllPaginatedStatement.executeQuery()) {
+                return extractStorehouseList(result);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get paginated storehouse records", e);
+        }
+    }
+
+    @Override
+    public long countAll() {
+        try (ResultSet result = countAllStatement.executeQuery()) {
+            if (result.next()) {
+                return result.getLong(1);
+            }
+            return 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to count storehouse records", e);
+        }
     }
 }

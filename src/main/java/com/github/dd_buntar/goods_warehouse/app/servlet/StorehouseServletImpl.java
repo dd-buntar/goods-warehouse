@@ -31,8 +31,40 @@ public class StorehouseServletImpl extends HttpServlet {
         try {
             if (pathInfo == null || pathInfo.equals("/")) {  // GET /api/storehouse - получить все
                 try {
-                    List<Storehouse> storehouses = storehouseService.findAll();
+                    // Parse pagination parameters
+                    int page = 1;
+                    int size = 10;
+
+                    String pageParam = req.getParameter("page");
+                    if (pageParam != null && !pageParam.isEmpty()) {
+                        try {
+                            page = Math.max(1, Integer.parseInt(pageParam));
+                        } catch (NumberFormatException e) {
+                            page = 1; // fallback to default
+                        }
+                    }
+
+                    String sizeParam = req.getParameter("size");
+                    if (sizeParam != null && !sizeParam.isEmpty()) {
+                        try {
+                            int requestedSize = Integer.parseInt(sizeParam);
+                            if (requestedSize >= 1 && requestedSize <= 100) {
+                                size = requestedSize;
+                            }
+                        } catch (NumberFormatException e) {
+                            size = 10; // fallback to default
+                        }
+                    }
+
+                    List<Storehouse> storehouses = storehouseService.findAll(page, size);
+                    long totalCount = storehouseService.getTotalCount();
+                    int totalPages = storehouseService.getTotalPages(totalCount, size);
+
                     req.setAttribute("storehouse", storehouses);
+                    req.setAttribute("currentPage", page);
+                    req.setAttribute("totalPages", totalPages);
+                    req.setAttribute("totalCount", totalCount);
+                    req.setAttribute("pageSize", size);
                     req.getRequestDispatcher("/views/storehouses.jsp").forward(req, resp);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());

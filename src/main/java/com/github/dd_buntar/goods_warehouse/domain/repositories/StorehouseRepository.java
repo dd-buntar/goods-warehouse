@@ -10,4 +10,8 @@ public interface StorehouseRepository extends Repository<Storehouse, Long> {
 
     List<Storehouse> findByShipmentId(Long shipmentId);
 
+    List<Storehouse> findAll(int limit, int offset);
+
+    long countAll();
+
 }
